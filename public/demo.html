@@ -5,594 +5,606 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Wem — Interactive Demo</title>
 <style>
-:root {
-  --navy:#07122B; --brand:#0A84FF; --cyan:#00E5FF; --green:#30D158;
-  --amber:#FFD60A; --red:#FF453A; --white:#FFFFFF; --card:#0F1E35;
-  --border:#1A3A5C; --muted:#4A7A9B; --text:#E8F4FF; --sub:#7EAECE;
+:root{
+  --navy:#07122B;--brand:#0A84FF;--cyan:#00E5FF;--green:#30D158;
+  --amber:#FFD60A;--white:#FFFFFF;--card:#0F1E35;
+  --border:#1A3A5C;--muted:#4A7A9B;--text:#E8F4FF;--sub:#7EAECE;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;background:var(--navy);color:var(--text);min-height:100vh;overflow-x:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;
+  background:var(--navy);color:var(--text);min-height:100vh;overflow-x:hidden}
 
-/* ── LANDING ── */
+/* ═══════════ LANDING ═══════════ */
 #landing{
-  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:40px 20px;
-  background:radial-gradient(ellipse at 50% 0%,rgba(10,132,255,0.15) 0%,transparent 65%);
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:40px 20px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(10,132,255,0.14),transparent 65%);
 }
-.logo-mark{font-size:48px;font-weight:900;letter-spacing:-2px;color:var(--white);margin-bottom:8px}
-.logo-mark span{color:var(--brand)}
-.tagline{font-size:14px;color:var(--sub);margin-bottom:48px;letter-spacing:0.5px}
-.landing-title{font-size:clamp(28px,5vw,52px);font-weight:900;text-align:center;line-height:1.1;margin-bottom:16px}
-.landing-title em{color:var(--brand);font-style:normal}
-.landing-sub{font-size:17px;color:var(--sub);text-align:center;max-width:520px;line-height:1.6;margin-bottom:56px}
+.wem-logo{font-size:52px;font-weight:900;letter-spacing:-2px;color:var(--white);margin-bottom:6px}
+.wem-logo span{color:var(--brand)}
+.wem-tag{font-size:13px;color:var(--sub);letter-spacing:.5px;margin-bottom:52px}
+.land-h1{font-size:clamp(26px,5vw,50px);font-weight:900;text-align:center;line-height:1.1;margin-bottom:14px}
+.land-h1 em{color:var(--brand);font-style:normal}
+.land-p{font-size:17px;color:var(--sub);text-align:center;max-width:500px;line-height:1.6;margin-bottom:52px}
+.land-cards{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;width:100%;max-width:760px}
+.land-card{
+  flex:1;min-width:260px;max-width:350px;
+  background:var(--card);border:1.5px solid var(--border);border-radius:22px;
+  padding:28px 24px;cursor:pointer;transition:all .25s;
+  display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;
+}
+.land-card:hover{transform:translateY(-4px)}
+.land-card.god:hover{border-color:var(--brand);box-shadow:0 16px 40px rgba(10,132,255,0.18)}
+.land-card.qr:hover{border-color:var(--cyan);box-shadow:0 16px 40px rgba(0,229,255,0.14)}
+.lc-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.lc-icon.god{background:rgba(10,132,255,0.14)}
+.lc-icon.qr{background:rgba(0,229,255,0.1)}
+.lc-title{font-size:19px;font-weight:800}
+.lc-desc{font-size:13px;color:var(--sub);line-height:1.6}
+.lc-btn{margin-top:6px;padding:11px 0;border-radius:11px;font-size:14px;font-weight:700;text-align:center;border:none;cursor:pointer;transition:opacity .2s}
+.lc-btn.god{background:var(--brand);color:#fff}
+.lc-btn.qr{background:rgba(0,229,255,0.1);color:var(--cyan);border:1px solid rgba(0,229,255,0.28)}
+.lc-btn:hover{opacity:.85}
 
-.view-cards{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;width:100%;max-width:780px}
-.view-card{
-  flex:1;min-width:280px;max-width:360px;
-  background:var(--card);border:1.5px solid var(--border);border-radius:24px;
-  padding:32px 28px;cursor:pointer;transition:all 0.25s;
-  display:flex;flex-direction:column;gap:16px;
-  position:relative;overflow:hidden;
-}
-.view-card::before{
-  content:'';position:absolute;inset:0;border-radius:24px;
-  opacity:0;transition:opacity 0.25s;
-}
-.view-card.god::before{background:radial-gradient(ellipse at 50% 0%,rgba(10,132,255,0.12),transparent 70%)}
-.view-card.qr::before{background:radial-gradient(ellipse at 50% 0%,rgba(0,229,255,0.12),transparent 70%)}
-.view-card:hover{transform:translateY(-4px);border-color:var(--brand)}
-.view-card.qr:hover{border-color:var(--cyan)}
-.view-card:hover::before{opacity:1}
-.card-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px}
-.card-icon.god{background:rgba(10,132,255,0.15)}
-.card-icon.qr{background:rgba(0,229,255,0.15)}
-.card-title{font-size:20px;font-weight:800}
-.card-desc{font-size:14px;color:var(--sub);line-height:1.6}
-.card-btn{
-  margin-top:8px;padding:12px 0;border-radius:12px;
-  font-size:14px;font-weight:700;text-align:center;
-  border:none;cursor:pointer;transition:all 0.2s;
-}
-.card-btn.god{background:var(--brand);color:white}
-.card-btn.qr{background:rgba(0,229,255,0.12);color:var(--cyan);border:1px solid rgba(0,229,255,0.3)}
-.card-btn:hover{opacity:0.85}
-
-/* ── SHARED LAYOUT ── */
+/* ═══════════ SHARED HEADER ═══════════ */
 #godView,#qrView{display:none;min-height:100vh;flex-direction:column}
-.view-header{
+.vh{
   display:flex;align-items:center;justify-content:space-between;
-  padding:16px 28px;border-bottom:1px solid var(--border);
-  background:rgba(7,18,43,0.96);backdrop-filter:blur(12px);
-  position:sticky;top:0;z-index:100;
+  padding:14px 24px;border-bottom:1px solid var(--border);
+  background:rgba(7,18,43,.97);backdrop-filter:blur(14px);
+  position:sticky;top:0;z-index:200;
 }
-.view-header-left{display:flex;align-items:center;gap:16px}
-.back-btn{
-  display:flex;align-items:center;gap:6px;
-  background:none;border:1px solid var(--border);color:var(--sub);
-  padding:7px 14px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;
-  transition:all 0.2s;
-}
-.back-btn:hover{border-color:var(--brand);color:var(--brand)}
-.view-title{font-size:16px;font-weight:800}
-.view-badge{
-  display:flex;align-items:center;gap:5px;
-  background:rgba(48,209,88,0.1);border:1px solid rgba(48,209,88,0.25);
-  border-radius:20px;padding:5px 12px;font-size:11px;font-weight:800;color:var(--green);
-}
-.pulse{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.vh-left{display:flex;align-items:center;gap:14px}
+.back{background:none;border:1px solid var(--border);color:var(--sub);
+  padding:6px 14px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s}
+.back:hover{border-color:var(--brand);color:var(--brand)}
+.vh-title{font-size:15px;font-weight:800}
+.live-badge{display:flex;align-items:center;gap:5px;
+  background:rgba(48,209,88,.1);border:1px solid rgba(48,209,88,.25);
+  border-radius:20px;padding:5px 12px;font-size:11px;font-weight:800;color:var(--green)}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
-/* ── GOD VIEW ── */
+/* ═══════════ GOD VIEW ═══════════ */
 .god-body{
-  display:flex;gap:0;flex:1;
-  overflow:hidden;
+  flex:1;display:flex;align-items:flex-start;justify-content:center;
+  padding:32px 24px 48px;gap:40px;flex-wrap:wrap;
+  background:radial-gradient(ellipse at 50% 20%,rgba(10,132,255,.05),transparent 60%);
+  position:relative;overflow:visible;
 }
-.phones-area{
-  flex:1;display:flex;align-items:center;justify-content:center;
-  gap:28px;padding:32px 20px;flex-wrap:wrap;
-  background:radial-gradient(ellipse at 50% 30%,rgba(10,132,255,0.06),transparent 60%);
-}
-.phone-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
-.phone-chip{
-  font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
-  padding:5px 14px;border-radius:20px;
-}
-.phone-chip.rider{background:rgba(10,132,255,0.12);color:var(--brand);border:1px solid rgba(10,132,255,0.3)}
-.phone-chip.driver{background:rgba(0,229,255,0.1);color:var(--cyan);border:1px solid rgba(0,229,255,0.25)}
-.phone-frame{
-  width:260px;height:520px;border-radius:38px;
-  border:2px solid var(--border);overflow:hidden;
-  background:#000;box-shadow:0 24px 60px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.04);
+
+/* Phone wrapper — position:relative so callouts anchor to it */
+.pw{display:flex;flex-direction:column;align-items:center;gap:10px;position:relative}
+.pchip{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  padding:5px 14px;border-radius:20px}
+.pchip.rider{background:rgba(10,132,255,.1);color:var(--brand);border:1px solid rgba(10,132,255,.28)}
+.pchip.driver{background:rgba(0,229,255,.08);color:var(--cyan);border:1px solid rgba(0,229,255,.22)}
+.pf{
+  width:320px;height:640px;border-radius:42px;
+  border:2px solid var(--border);overflow:hidden;background:#000;
+  box-shadow:0 28px 70px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04);
   position:relative;flex-shrink:0;
 }
-.phone-notch{
-  position:absolute;top:10px;left:50%;transform:translateX(-50%);
-  width:88px;height:22px;background:#000;border-radius:11px;z-index:10;
-}
-.phone-frame iframe{
-  width:390px;height:780px;border:none;
-  transform:scale(0.667);transform-origin:top left;
-}
-.phone-open{
-  font-size:12px;color:var(--sub);text-decoration:none;
-  padding:6px 14px;border:1px solid var(--border);border-radius:8px;
-  transition:all 0.2s;
-}
-.phone-open:hover{color:var(--brand);border-color:var(--brand)}
+.notch{position:absolute;top:11px;left:50%;transform:translateX(-50%);
+  width:90px;height:22px;background:#000;border-radius:11px;z-index:10}
+.pf iframe{width:390px;height:780px;border:none;transform:scale(0.821);transform-origin:top left}
+.popen{font-size:11px;color:var(--sub);text-decoration:none;
+  padding:5px 13px;border:1px solid var(--border);border-radius:7px;transition:all .2s}
+.popen:hover{color:var(--brand);border-color:var(--brand)}
 
-/* ── GUIDE PANEL ── */
-.guide-panel{
-  width:320px;flex-shrink:0;
-  border-left:1px solid var(--border);
-  display:flex;flex-direction:column;
-  overflow:hidden;
+/* ═══════════ FLOATING CALLOUT ═══════════ */
+.callout{
+  position:absolute;
+  background:var(--card);
+  border:1.5px solid var(--brand);
+  border-radius:16px;
+  padding:14px 16px;
+  width:220px;
+  z-index:300;
+  box-shadow:0 8px 32px rgba(10,132,255,.25),0 2px 8px rgba(0,0,0,.4);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .35s, transform .35s;
+  transform:scale(.95);
 }
-.guide-top{padding:20px;border-bottom:1px solid var(--border)}
-.guide-top-label{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:1px;margin-bottom:12px}
-.guide-steps{flex:1;overflow-y:auto;padding:16px}
-.guide-steps::-webkit-scrollbar{width:4px}
-.guide-steps::-webkit-scrollbar-track{background:transparent}
-.guide-steps::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.callout.visible{opacity:1;pointer-events:auto;transform:scale(1)}
+.callout.driver-side{border-color:var(--cyan);box-shadow:0 8px 32px rgba(0,229,255,.2),0 2px 8px rgba(0,0,0,.4)}
 
-.g-step{
-  display:flex;gap:12px;padding:12px;border-radius:14px;
-  cursor:pointer;transition:all 0.2s;margin-bottom:4px;
-  border:1px solid transparent;
+/* Arrow pointing left (from right callout toward phone) */
+.callout::before{
+  content:'';position:absolute;
+  width:0;height:0;
 }
-.g-step:hover{background:rgba(255,255,255,0.03)}
-.g-step.active{background:rgba(10,132,255,0.08);border-color:rgba(10,132,255,0.2)}
-.g-step-num{
-  width:28px;height:28px;border-radius:50%;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:800;
-  background:var(--card);border:1.5px solid var(--border);color:var(--sub);
-  transition:all 0.2s;
+.callout.arr-right::before{
+  right:-10px;top:24px;
+  border-top:10px solid transparent;
+  border-bottom:10px solid transparent;
+  border-left:10px solid var(--brand);
 }
-.g-step.active .g-step-num{background:var(--brand);border-color:var(--brand);color:white}
-.g-step.done .g-step-num{background:var(--green);border-color:var(--green);color:white}
-.g-step-body{flex:1;min-width:0}
-.g-step-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px}
-.g-step.active .g-step-title{color:var(--brand)}
-.g-step-desc{font-size:12px;color:var(--sub);line-height:1.5;display:none}
-.g-step.active .g-step-desc,.g-step.done .g-step-desc{display:block}
-.g-badge{
-  display:inline-block;margin-top:6px;
-  font-size:9px;font-weight:800;letter-spacing:0.6px;
+.callout.arr-left::before{
+  left:-10px;top:24px;
+  border-top:10px solid transparent;
+  border-bottom:10px solid transparent;
+  border-right:10px solid var(--brand);
+}
+.callout.driver-side.arr-left::before{border-right-color:var(--cyan)}
+.callout.driver-side.arr-right::before{border-left-color:var(--cyan)}
+
+.co-step{font-size:10px;font-weight:800;letter-spacing:.8px;color:var(--muted);margin-bottom:6px}
+.co-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:5px;line-height:1.3}
+.co-desc{font-size:12px;color:var(--sub);line-height:1.55}
+.co-badge{
+  display:inline-block;margin-top:8px;
+  font-size:9px;font-weight:800;letter-spacing:.6px;
   padding:2px 8px;border-radius:20px;
 }
-.b-safety{background:rgba(48,209,88,0.12);color:var(--green);border:1px solid rgba(48,209,88,0.25)}
-.b-ai{background:rgba(10,132,255,0.12);color:var(--brand);border:1px solid rgba(10,132,255,0.25)}
-.b-unique{background:rgba(0,229,255,0.1);color:var(--cyan);border:1px solid rgba(0,229,255,0.2)}
-.b-driver{background:rgba(255,214,10,0.1);color:var(--amber);border:1px solid rgba(255,214,10,0.2)}
-.b-pink{background:rgba(255,107,157,0.1);color:#FF6B9D;border:1px solid rgba(255,107,157,0.2)}
+.b-safety{background:rgba(48,209,88,.1);color:var(--green);border:1px solid rgba(48,209,88,.22)}
+.b-ai{background:rgba(10,132,255,.1);color:var(--brand);border:1px solid rgba(10,132,255,.22)}
+.b-unique{background:rgba(0,229,255,.08);color:var(--cyan);border:1px solid rgba(0,229,255,.2)}
+.b-driver{background:rgba(255,214,10,.1);color:var(--amber);border:1px solid rgba(255,214,10,.2)}
+.b-pink{background:rgba(255,107,157,.1);color:#FF6B9D;border:1px solid rgba(255,107,157,.2)}
 
-.guide-nav{
-  padding:16px;border-top:1px solid var(--border);
-  display:flex;align-items:center;gap:10px;
+/* ═══════════ AUTO-ADVANCE BAR ═══════════ */
+.tour-bar{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+  background:rgba(15,30,53,.95);border:1px solid var(--border);
+  border-radius:50px;padding:10px 16px;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 8px 32px rgba(0,0,0,.5);
+  backdrop-filter:blur(12px);z-index:400;
+  transition:opacity .3s;
 }
-.gnav-btn{
-  flex:1;padding:10px;border-radius:10px;font-size:13px;font-weight:700;
-  cursor:pointer;transition:all 0.2s;border:none;
+.tour-bar.hidden{opacity:0;pointer-events:none}
+.tb-btn{
+  width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+  transition:all .2s;flex-shrink:0;
 }
-.gnav-prev{background:var(--card);color:var(--sub);border:1px solid var(--border)}
-.gnav-next{background:var(--brand);color:white}
-.gnav-btn:hover{opacity:0.85}
-.gnav-count{font-size:11px;color:var(--sub);white-space:nowrap}
+.tb-prev{background:rgba(255,255,255,.06);color:var(--sub)}
+.tb-prev:hover{background:rgba(255,255,255,.12);color:var(--text)}
+.tb-next{background:var(--brand);color:#fff}
+.tb-next:hover{background:#0070DD}
+.tb-dots{display:flex;gap:5px;align-items:center}
+.tb-dot{
+  height:6px;border-radius:3px;background:var(--border);
+  transition:all .3s;cursor:pointer;
+}
+.tb-dot.active{background:var(--brand);width:18px}
+.tb-dot:not(.active){width:6px}
+.tb-label{font-size:12px;font-weight:600;color:var(--sub);white-space:nowrap;min-width:110px;text-align:center}
 
-/* ── QR VIEW ── */
-.qr-body{flex:1;display:flex;flex-direction:column;gap:0;overflow:auto}
-.qr-hero{
-  padding:48px 32px 32px;text-align:center;
-  background:radial-gradient(ellipse at 50% 0%,rgba(0,229,255,0.08),transparent 60%);
-}
-.qr-hero h2{font-size:clamp(24px,4vw,40px);font-weight:900;margin-bottom:10px}
-.qr-hero p{font-size:16px;color:var(--sub);max-width:480px;margin:0 auto;line-height:1.6}
-.qr-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-  gap:24px;padding:32px;max-width:900px;margin:0 auto;width:100%;
-}
-.qr-card{
-  background:var(--card);border:1.5px solid var(--border);border-radius:24px;
-  padding:28px;text-align:center;transition:all 0.2s;
-}
-.qr-card:hover{transform:translateY(-3px)}
-.qr-card.rider:hover{border-color:var(--brand);box-shadow:0 12px 32px rgba(10,132,255,0.15)}
-.qr-card.driver:hover{border-color:var(--cyan);box-shadow:0 12px 32px rgba(0,229,255,0.12)}
-.qr-card-title{font-size:18px;font-weight:800;margin-bottom:6px}
-.qr-card-sub{font-size:13px;color:var(--sub);margin-bottom:24px;line-height:1.5}
-.qr-box{width:160px;height:160px;margin:0 auto 16px;background:white;border-radius:16px;display:flex;align-items:center;justify-content:center}
-.qr-box svg{width:144px;height:144px}
-.qr-url{font-size:11px;color:var(--muted);margin-bottom:16px;font-family:monospace}
-.qr-open{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:10px 22px;border-radius:12px;font-size:13px;font-weight:700;
-  text-decoration:none;transition:all 0.2s;
-}
-.qr-card.rider .qr-open{background:var(--brand);color:white}
-.qr-card.driver .qr-open{background:rgba(0,229,255,0.12);color:var(--cyan);border:1px solid rgba(0,229,255,0.3)}
-.qr-open:hover{opacity:0.85;transform:translateY(-1px)}
+/* progress ring */
+.tb-ring{position:relative;width:32px;height:32px;flex-shrink:0}
+.tb-ring svg{position:absolute;top:0;left:0;transform:rotate(-90deg)}
+.tb-ring-track{fill:none;stroke:rgba(255,255,255,.08);stroke-width:3}
+.tb-ring-fill{fill:none;stroke:var(--brand);stroke-width:3;stroke-linecap:round;
+  stroke-dasharray:82;stroke-dashoffset:82;transition:stroke-dashoffset .1s linear}
+.tb-ring-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:13px;cursor:pointer}
 
-/* ── QR GUIDE ── */
-.qr-guide{padding:0 32px 48px;max-width:900px;margin:0 auto;width:100%}
-.qr-guide-label{
-  font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1.2px;
-  text-transform:uppercase;margin-bottom:20px;
-  display:flex;align-items:center;gap:8px;
-}
-.qr-guide-label::after{content:'';flex:1;height:1px;background:var(--border)}
-.feature-list{display:flex;flex-direction:column;gap:12px}
-.feat{
-  display:flex;gap:16px;align-items:flex-start;
-  background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;
-  cursor:pointer;transition:all 0.2s;
-}
-.feat:hover{border-color:rgba(10,132,255,0.3)}
-.feat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.feat-body{flex:1}
-.feat-title{font-size:15px;font-weight:800;margin-bottom:4px}
-.feat-desc{font-size:13px;color:var(--sub);line-height:1.6}
-.feat-badge{display:inline-block;margin-top:8px;font-size:10px;font-weight:800;letter-spacing:0.6px;padding:3px 10px;border-radius:20px}
-
-/* ── STATS ── */
-.stats-bar{
-  display:flex;gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-  padding:0;background:rgba(0,0,0,0.2);
-}
-.stat{
-  flex:1;padding:20px;text-align:center;
-  border-right:1px solid var(--border);
-}
+/* ═══════════ STATS ═══════════ */
+.stats{display:flex;border-top:1px solid var(--border);background:rgba(0,0,0,.18)}
+.stat{flex:1;padding:18px;text-align:center;border-right:1px solid var(--border)}
 .stat:last-child{border-right:none}
-.stat-n{font-size:28px;font-weight:900;color:var(--brand)}
-.stat-l{font-size:11px;color:var(--sub);margin-top:4px;line-height:1.4}
+.stat-n{font-size:26px;font-weight:900;color:var(--brand)}
+.stat-l{font-size:11px;color:var(--sub);margin-top:3px;line-height:1.4}
 
-/* ── FOOTER ── */
-.demo-footer{
-  text-align:center;padding:32px 20px;
-  border-top:1px solid var(--border);
-  color:var(--muted);font-size:12px;line-height:1.8;
-}
+/* ═══════════ QR VIEW ═══════════ */
+.qr-body{flex:1;display:flex;flex-direction:column;overflow:auto}
+.qr-hero{padding:44px 28px 28px;text-align:center;
+  background:radial-gradient(ellipse at 50% 0%,rgba(0,229,255,.07),transparent 55%)}
+.qr-hero h2{font-size:clamp(22px,4vw,38px);font-weight:900;margin-bottom:10px}
+.qr-hero p{font-size:15px;color:var(--sub);max-width:460px;margin:0 auto;line-height:1.6}
+.qr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:20px;padding:28px;max-width:860px;margin:0 auto;width:100%}
+.qrc{background:var(--card);border:1.5px solid var(--border);border-radius:22px;
+  padding:26px;text-align:center;transition:all .2s}
+.qrc.rider:hover{border-color:var(--brand);box-shadow:0 12px 32px rgba(10,132,255,.14)}
+.qrc.driver:hover{border-color:var(--cyan);box-shadow:0 12px 32px rgba(0,229,255,.1)}
+.qrc-t{font-size:17px;font-weight:800;margin-bottom:5px}
+.qrc-s{font-size:13px;color:var(--sub);margin-bottom:20px;line-height:1.5}
+.qr-box{width:152px;height:152px;margin:0 auto 14px;background:#fff;
+  border-radius:14px;display:flex;align-items:center;justify-content:center}
+.qr-box svg{width:136px;height:136px}
+.qr-url{font-size:10px;color:var(--muted);margin-bottom:14px;font-family:monospace}
+.qr-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;
+  border-radius:11px;font-size:13px;font-weight:700;text-decoration:none;transition:all .2s}
+.qrc.rider .qr-btn{background:var(--brand);color:#fff}
+.qrc.driver .qr-btn{background:rgba(0,229,255,.1);color:var(--cyan);border:1px solid rgba(0,229,255,.28)}
+.qr-btn:hover{opacity:.85}
+
+.feat-guide{padding:0 28px 48px;max-width:860px;margin:0 auto;width:100%}
+.feat-label{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:1.2px;
+  text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.feat-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.feat-list{display:flex;flex-direction:column;gap:10px}
+.feat{display:flex;gap:14px;background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:16px;transition:all .2s}
+.feat:hover{border-color:rgba(10,132,255,.3)}
+.feat-ico{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;
+  justify-content:center;font-size:19px;flex-shrink:0}
+.feat-body{flex:1}
+.feat-t{font-size:14px;font-weight:800;margin-bottom:3px}
+.feat-d{font-size:12px;color:var(--sub);line-height:1.55}
+.feat-badge{display:inline-block;margin-top:6px;font-size:9px;font-weight:800;
+  letter-spacing:.6px;padding:2px 9px;border-radius:20px}
+
+.demo-footer{text-align:center;padding:28px 20px;border-top:1px solid var(--border);
+  color:var(--muted);font-size:12px;line-height:1.8}
 .demo-footer a{color:var(--brand);text-decoration:none}
 
-@media(max-width:900px){
-  .guide-panel{display:none}
-  .god-body{flex-direction:column}
-  .phones-area{padding:20px 12px}
-  .phone-frame{width:220px;height:440px}
-  .phone-frame iframe{transform:scale(0.564)}
-  .stats-bar{flex-wrap:wrap}
-  .stat{min-width:50%;border-right:none;border-bottom:1px solid var(--border)}
+@media(max-width:780px){
+  .pf{width:260px;height:520px}
+  .pf iframe{transform:scale(0.667)}
+  .callout{width:180px;font-size:11px}
+  .god-body{gap:24px;padding:20px 12px 60px}
 }
-@media(max-width:600px){
-  .view-cards{flex-direction:column;align-items:center}
-  .view-card{max-width:100%}
-  .qr-grid{grid-template-columns:1fr;padding:16px}
-  .qr-guide{padding:0 16px 32px}
+@media(max-width:560px){
+  .land-cards{flex-direction:column;align-items:center}
+  .land-card{max-width:100%}
+  .pf{width:220px;height:440px}
+  .pf iframe{transform:scale(0.564)}
+  .callout{display:none}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════ LANDING ═══════════════════════════════ -->
+<!-- ═══════════════════ LANDING ═══════════════════ -->
 <section id="landing">
-  <div class="logo-mark">W<span>e</span>m</div>
-  <div class="tagline">Safety-first rideshare · Dallas / Fort Worth</div>
-  <h1 class="landing-title">Rideshare built around <em>safety first</em></h1>
-  <p class="landing-sub">The only DFW rideshare with AI monitoring, dash cam recording, and one-tap SOS on every ride — for riders and drivers.</p>
-
-  <div class="view-cards">
-    <div class="view-card god" onclick="showView('god')">
-      <div class="card-icon god">📱</div>
-      <div class="card-title">God View</div>
-      <p class="card-desc">See both the rider and driver apps side by side, fully interactive. Follow the guided tour to understand how a ride looks from both perspectives.</p>
-      <button class="card-btn god">Open God View →</button>
+  <div class="wem-logo">W<span>e</span>m</div>
+  <div class="wem-tag">Safety-first rideshare · Dallas / Fort Worth</div>
+  <h1 class="land-h1">Rideshare built around <em>safety first</em></h1>
+  <p class="land-p">The only DFW rideshare with AI monitoring, dash cam recording, and one-tap SOS on every ride.</p>
+  <div class="land-cards">
+    <div class="land-card god" onclick="showView('god')">
+      <div class="lc-icon god">📱</div>
+      <div class="lc-title">God View</div>
+      <p class="lc-desc">See both apps side by side, fully interactive. A guided tour highlights every key feature with floating callouts.</p>
+      <button class="lc-btn god">Open God View →</button>
     </div>
-    <div class="view-card qr" onclick="showView('qr')">
-      <div class="card-icon qr">⬛</div>
-      <div class="card-title">Scan QR Code</div>
-      <p class="card-desc">Scan to open the live app on your own device. Choose rider or driver — then follow the feature guide to explore what makes Wem different.</p>
-      <button class="card-btn qr">Get QR Codes →</button>
+    <div class="land-card qr" onclick="showView('qr')">
+      <div class="lc-icon qr">⬛</div>
+      <div class="lc-title">Scan QR Code</div>
+      <p class="lc-desc">Open the live app on your own phone. Pick rider or driver, then follow the feature guide.</p>
+      <button class="lc-btn qr">Get QR Codes →</button>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════ GOD VIEW ════════════════════════════════ -->
+<!-- ═══════════════════ GOD VIEW ═══════════════════ -->
 <section id="godView">
-  <div class="view-header">
-    <div class="view-header-left">
-      <button class="back-btn" onclick="showView('landing')">← Back</button>
-      <div class="view-title">God View — Rider &amp; Driver</div>
+  <div class="vh">
+    <div class="vh-left">
+      <button class="back" onclick="showView('landing')">← Back</button>
+      <div class="vh-title">God View — Rider &amp; Driver</div>
     </div>
-    <div class="view-badge"><div class="pulse"></div>LIVE APP</div>
+    <div class="live-badge"><div class="live-dot"></div>LIVE APP</div>
   </div>
 
-  <div class="god-body">
-    <!-- Phones -->
-    <div class="phones-area">
-      <div class="phone-wrap">
-        <div class="phone-chip rider">Rider App</div>
-        <div class="phone-frame">
-          <div class="phone-notch"></div>
-          <iframe src="https://wem-puce.vercel.app/" loading="lazy" title="Rider App"></iframe>
-        </div>
-        <a href="https://wem-puce.vercel.app/" target="_blank" class="phone-open">Open full screen ↗</a>
+  <div class="god-body" id="godBody">
+
+    <!-- RIDER PHONE -->
+    <div class="pw" id="riderPhone">
+      <div class="pchip rider">Rider App</div>
+      <div class="pf">
+        <div class="notch"></div>
+        <iframe id="riderFrame" src="https://wem-puce.vercel.app/rider/home" loading="lazy" title="Rider App"></iframe>
       </div>
-      <div class="phone-wrap">
-        <div class="phone-chip driver">Driver App</div>
-        <div class="phone-frame">
-          <div class="phone-notch"></div>
-          <iframe src="https://wem-puce.vercel.app/" loading="lazy" title="Driver App"></iframe>
-        </div>
-        <a href="https://wem-puce.vercel.app/" target="_blank" class="phone-open">Open full screen ↗</a>
-      </div>
+      <a href="https://wem-puce.vercel.app/rider/home" target="_blank" class="popen">Open full screen ↗</a>
+      <!-- Rider callouts injected by JS -->
     </div>
 
-    <!-- Guide Panel -->
-    <div class="guide-panel">
-      <div class="guide-top">
-        <div class="guide-top-label">FEATURE GUIDE</div>
-        <div style="font-size:13px;color:var(--sub);line-height:1.5">Follow along as you interact with the apps. Click any step to learn more.</div>
+    <!-- DRIVER PHONE -->
+    <div class="pw" id="driverPhone">
+      <div class="pchip driver">Driver App</div>
+      <div class="pf">
+        <div class="notch"></div>
+        <iframe id="driverFrame" src="https://wem-puce.vercel.app/driver/home" loading="lazy" title="Driver App"></iframe>
       </div>
-      <div class="guide-steps" id="godSteps">
-        <!-- Steps injected by JS -->
-      </div>
-      <div class="guide-nav">
-        <button class="gnav-btn gnav-prev" onclick="godPrev()">← Prev</button>
-        <div class="gnav-count" id="godCount">1 / 7</div>
-        <button class="gnav-btn gnav-next" onclick="godNext()">Next →</button>
-      </div>
+      <a href="https://wem-puce.vercel.app/driver/home" target="_blank" class="popen">Open full screen ↗</a>
+      <!-- Driver callouts injected by JS -->
     </div>
+
   </div>
 
-  <div class="stats-bar">
+  <div class="stats">
     <div class="stat"><div class="stat-n">8</div><div class="stat-l">Safety layers every ride</div></div>
     <div class="stat"><div class="stat-n" style="color:var(--green)">75%</div><div class="stat-l">Driver base pay Year 1</div></div>
     <div class="stat"><div class="stat-n" style="color:var(--cyan)">✦</div><div class="stat-l">Claude AI integrated</div></div>
-    <div class="stat"><div class="stat-n" style="color:var(--amber)">$0</div><div class="stat-l">Surge fees with Wem Pass</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--amber)">$0</div><div class="stat-l">Surge with Wem Pass</div></div>
   </div>
 
   <div class="demo-footer">
-    <strong style="color:var(--text)">Wem</strong> · WEM Concept &amp; Design LLC · Tarrant County, TX<br>
+    <strong style="color:var(--text)">Wem</strong> · WEM Concept &amp; Design LLC · Tarrant County TX<br>
     <a href="https://wem-puce.vercel.app">wem-puce.vercel.app</a>
   </div>
 </section>
 
-<!-- ═══════════════════════════════ QR VIEW ════════════════════════════════ -->
-<section id="qrView">
-  <div class="view-header">
-    <div class="view-header-left">
-      <button class="back-btn" onclick="showView('landing')">← Back</button>
-      <div class="view-title">Scan to Explore</div>
-    </div>
-    <div class="view-badge"><div class="pulse"></div>LIVE APP</div>
+<!-- Tour bar -->
+<div class="tour-bar hidden" id="tourBar">
+  <button class="tb-btn tb-prev" onclick="tourPrev()" title="Previous">‹</button>
+  <div class="tb-dots" id="tbDots"></div>
+  <div class="tb-label" id="tbLabel">Safety Hub</div>
+  <!-- progress ring with pause/play -->
+  <div class="tb-ring" id="tbRing">
+    <svg viewBox="0 0 32 32" width="32" height="32">
+      <circle class="tb-ring-track" cx="16" cy="16" r="13"/>
+      <circle class="tb-ring-fill" id="tbRingFill" cx="16" cy="16" r="13"/>
+    </svg>
+    <div class="tb-ring-icon" onclick="togglePause()" id="tbIcon">⏸</div>
   </div>
+  <button class="tb-btn tb-next" onclick="tourNext()" title="Next">›</button>
+</div>
 
+<!-- ═══════════════════ QR VIEW ═══════════════════ -->
+<section id="qrView">
+  <div class="vh">
+    <div class="vh-left">
+      <button class="back" onclick="showView('landing')">← Back</button>
+      <div class="vh-title">Scan to Explore</div>
+    </div>
+    <div class="live-badge"><div class="live-dot"></div>LIVE APP</div>
+  </div>
   <div class="qr-body">
     <div class="qr-hero">
       <h2>Open on your device</h2>
-      <p>Scan a QR code to open the live Wem app on your phone, then follow the guide below.</p>
+      <p>Scan a QR code to open the live Wem app on your phone, then follow the feature guide below.</p>
     </div>
-
     <div class="qr-grid">
-      <!-- Rider QR -->
-      <div class="qr-card rider">
-        <div class="qr-card-title">Rider App</div>
-        <div class="qr-card-sub">Book a ride with Claude AI, explore Safety Hub, and experience the full rider flow.</div>
-        <div class="qr-box">
-          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <rect width="200" height="200" fill="white"/>
-            <rect x="10" y="10" width="60" height="60" fill="none" stroke="#07122B" stroke-width="8"/>
-            <rect x="24" y="24" width="32" height="32" fill="#07122B"/>
-            <rect x="130" y="10" width="60" height="60" fill="none" stroke="#07122B" stroke-width="8"/>
-            <rect x="144" y="24" width="32" height="32" fill="#07122B"/>
-            <rect x="10" y="130" width="60" height="60" fill="none" stroke="#07122B" stroke-width="8"/>
-            <rect x="24" y="144" width="32" height="32" fill="#07122B"/>
-            <rect x="90" y="10" width="8" height="8" fill="#07122B"/><rect x="106" y="10" width="8" height="8" fill="#07122B"/>
-            <rect x="90" y="26" width="8" height="8" fill="#07122B"/><rect x="98" y="18" width="8" height="8" fill="#07122B"/>
-            <rect x="114" y="18" width="8" height="8" fill="#07122B"/><rect x="106" y="34" width="8" height="8" fill="#07122B"/>
-            <rect x="90" y="42" width="8" height="8" fill="#07122B"/><rect x="114" y="42" width="8" height="8" fill="#07122B"/>
-            <rect x="90" y="58" width="8" height="8" fill="#07122B"/><rect x="98" y="50" width="8" height="8" fill="#07122B"/>
-            <rect x="106" y="58" width="8" height="8" fill="#07122B"/><rect x="114" y="50" width="8" height="8" fill="#07122B"/>
-            <rect x="10" y="90" width="8" height="8" fill="#07122B"/><rect x="26" y="90" width="8" height="8" fill="#07122B"/>
-            <rect x="42" y="90" width="8" height="8" fill="#07122B"/><rect x="58" y="98" width="8" height="8" fill="#07122B"/>
-            <rect x="10" y="106" width="8" height="8" fill="#07122B"/><rect x="34" y="106" width="8" height="8" fill="#07122B"/>
-            <rect x="50" y="90" width="8" height="8" fill="#07122B"/><rect x="18" y="114" width="8" height="8" fill="#07122B"/>
-            <rect x="42" y="114" width="8" height="8" fill="#07122B"/><rect x="58" y="106" width="8" height="8" fill="#07122B"/>
-            <rect x="90" y="90" width="8" height="8" fill="#07122B"/><rect x="106" y="90" width="8" height="8" fill="#07122B"/>
-            <rect x="122" y="98" width="8" height="8" fill="#07122B"/><rect x="138" y="90" width="8" height="8" fill="#07122B"/>
-            <rect x="154" y="90" width="8" height="8" fill="#07122B"/><rect x="170" y="90" width="8" height="8" fill="#07122B"/>
-            <rect x="98" y="98" width="8" height="8" fill="#07122B"/><rect x="114" y="106" width="8" height="8" fill="#07122B"/>
-            <rect x="130" y="106" width="8" height="8" fill="#07122B"/><rect x="146" y="98" width="8" height="8" fill="#07122B"/>
-            <rect x="162" y="106" width="8" height="8" fill="#07122B"/><rect x="178" y="98" width="8" height="8" fill="#07122B"/>
-            <rect x="90" y="114" width="8" height="8" fill="#07122B"/><rect x="106" y="114" width="8" height="8" fill="#07122B"/>
-            <rect x="122" y="114" width="8" height="8" fill="#07122B"/><rect x="170" y="114" width="8" height="8" fill="#07122B"/>
-            <rect x="90" y="130" width="8" height="8" fill="#07122B"/><rect x="106" y="130" width="8" height="8" fill="#07122B"/>
-            <rect x="122" y="138" width="8" height="8" fill="#07122B"/><rect x="138" y="130" width="8" height="8" fill="#07122B"/>
-            <rect x="154" y="138" width="8" height="8" fill="#07122B"/><rect x="170" y="130" width="8" height="8" fill="#07122B"/>
-            <rect x="90" y="146" width="8" height="8" fill="#07122B"/><rect x="114" y="146" width="8" height="8" fill="#07122B"/>
-            <rect x="130" y="146" width="8" height="8" fill="#07122B"/><rect x="162" y="146" width="8" height="8" fill="#07122B"/>
-            <rect x="178" y="138" width="8" height="8" fill="#07122B"/><rect x="98" y="154" width="8" height="8" fill="#07122B"/>
-            <rect x="122" y="154" width="8" height="8" fill="#07122B"/><rect x="146" y="154" width="8" height="8" fill="#07122B"/>
-            <rect x="170" y="154" width="8" height="8" fill="#07122B"/><rect x="90" y="162" width="8" height="8" fill="#07122B"/>
-            <rect x="106" y="162" width="8" height="8" fill="#07122B"/><rect x="130" y="162" width="8" height="8" fill="#07122B"/>
-            <rect x="154" y="162" width="8" height="8" fill="#07122B"/><rect x="178" y="162" width="8" height="8" fill="#07122B"/>
-            <rect x="88" y="88" width="24" height="24" rx="4" fill="#0A84FF"/>
-            <text x="100" y="105" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="900" fill="white">W</text>
-          </svg>
-        </div>
-        <div class="qr-url">wem-puce.vercel.app</div>
-        <a href="https://wem-puce.vercel.app/" target="_blank" class="qr-open">Open Rider App ↗</a>
+      <div class="qrc rider">
+        <div class="qrc-t">Rider App</div>
+        <div class="qrc-s">Book with Claude AI, explore Safety Hub, and experience the full rider flow.</div>
+        <div class="qr-box"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="white"/><rect x="10" y="10" width="60" height="60" fill="none" stroke="#07122B" stroke-width="8"/><rect x="24" y="24" width="32" height="32" fill="#07122B"/><rect x="130" y="10" width="60" height="60" fill="none" stroke="#07122B" stroke-width="8"/><rect x="144" y="24" width="32" height="32" fill="#07122B"/><rect x="10" y="130" width="60" height="60" fill="none" stroke="#07122B" stroke-width="8"/><rect x="24" y="144" width="32" height="32" fill="#07122B"/><rect x="90" y="10" width="8" height="8" fill="#07122B"/><rect x="106" y="10" width="8" height="8" fill="#07122B"/><rect x="90" y="26" width="8" height="8" fill="#07122B"/><rect x="98" y="18" width="8" height="8" fill="#07122B"/><rect x="114" y="18" width="8" height="8" fill="#07122B"/><rect x="106" y="34" width="8" height="8" fill="#07122B"/><rect x="90" y="42" width="8" height="8" fill="#07122B"/><rect x="114" y="42" width="8" height="8" fill="#07122B"/><rect x="90" y="58" width="8" height="8" fill="#07122B"/><rect x="98" y="50" width="8" height="8" fill="#07122B"/><rect x="106" y="58" width="8" height="8" fill="#07122B"/><rect x="114" y="50" width="8" height="8" fill="#07122B"/><rect x="10" y="90" width="8" height="8" fill="#07122B"/><rect x="26" y="90" width="8" height="8" fill="#07122B"/><rect x="42" y="90" width="8" height="8" fill="#07122B"/><rect x="58" y="98" width="8" height="8" fill="#07122B"/><rect x="10" y="106" width="8" height="8" fill="#07122B"/><rect x="34" y="106" width="8" height="8" fill="#07122B"/><rect x="50" y="90" width="8" height="8" fill="#07122B"/><rect x="18" y="114" width="8" height="8" fill="#07122B"/><rect x="42" y="114" width="8" height="8" fill="#07122B"/><rect x="58" y="106" width="8" height="8" fill="#07122B"/><rect x="90" y="90" width="8" height="8" fill="#07122B"/><rect x="106" y="90" width="8" height="8" fill="#07122B"/><rect x="122" y="98" width="8" height="8" fill="#07122B"/><rect x="138" y="90" width="8" height="8" fill="#07122B"/><rect x="154" y="90" width="8" height="8" fill="#07122B"/><rect x="170" y="90" width="8" height="8" fill="#07122B"/><rect x="98" y="98" width="8" height="8" fill="#07122B"/><rect x="114" y="106" width="8" height="8" fill="#07122B"/><rect x="130" y="106" width="8" height="8" fill="#07122B"/><rect x="146" y="98" width="8" height="8" fill="#07122B"/><rect x="162" y="106" width="8" height="8" fill="#07122B"/><rect x="178" y="98" width="8" height="8" fill="#07122B"/><rect x="90" y="114" width="8" height="8" fill="#07122B"/><rect x="106" y="114" width="8" height="8" fill="#07122B"/><rect x="122" y="114" width="8" height="8" fill="#07122B"/><rect x="170" y="114" width="8" height="8" fill="#07122B"/><rect x="90" y="130" width="8" height="8" fill="#07122B"/><rect x="106" y="130" width="8" height="8" fill="#07122B"/><rect x="122" y="138" width="8" height="8" fill="#07122B"/><rect x="138" y="130" width="8" height="8" fill="#07122B"/><rect x="154" y="138" width="8" height="8" fill="#07122B"/><rect x="170" y="130" width="8" height="8" fill="#07122B"/><rect x="90" y="146" width="8" height="8" fill="#07122B"/><rect x="114" y="146" width="8" height="8" fill="#07122B"/><rect x="130" y="146" width="8" height="8" fill="#07122B"/><rect x="162" y="146" width="8" height="8" fill="#07122B"/><rect x="178" y="138" width="8" height="8" fill="#07122B"/><rect x="98" y="154" width="8" height="8" fill="#07122B"/><rect x="122" y="154" width="8" height="8" fill="#07122B"/><rect x="146" y="154" width="8" height="8" fill="#07122B"/><rect x="170" y="154" width="8" height="8" fill="#07122B"/><rect x="90" y="162" width="8" height="8" fill="#07122B"/><rect x="106" y="162" width="8" height="8" fill="#07122B"/><rect x="130" y="162" width="8" height="8" fill="#07122B"/><rect x="154" y="162" width="8" height="8" fill="#07122B"/><rect x="178" y="162" width="8" height="8" fill="#07122B"/><rect x="88" y="88" width="24" height="24" rx="4" fill="#0A84FF"/><text x="100" y="105" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="900" fill="white">W</text></svg></div>
+        <div class="qr-url">wem-puce.vercel.app/rider/home</div>
+        <a href="https://wem-puce.vercel.app/rider/home" target="_blank" class="qr-btn">Open Rider App ↗</a>
       </div>
-
-      <!-- Driver QR -->
-      <div class="qr-card driver">
-        <div class="qr-card-title">Driver App</div>
-        <div class="qr-card-sub">See driver earnings, accept rides, explore Safety Hub, and Claude driver support.</div>
-        <div class="qr-box">
-          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <rect width="200" height="200" fill="white"/>
-            <rect x="10" y="10" width="60" height="60" fill="none" stroke="#07122B" stroke-width="8"/>
-            <rect x="24" y="24" width="32" height="32" fill="#07122B"/>
-            <rect x="130" y="10" width="60" height="60" fill="none" stroke="#07122B" stroke-width="8"/>
-            <rect x="144" y="24" width="32" height="32" fill="#07122B"/>
-            <rect x="10" y="130" width="60" height="60" fill="none" stroke="#07122B" stroke-width="8"/>
-            <rect x="24" y="144" width="32" height="32" fill="#07122B"/>
-            <rect x="90" y="10" width="8" height="8" fill="#07122B"/><rect x="114" y="10" width="8" height="8" fill="#07122B"/>
-            <rect x="98" y="18" width="8" height="8" fill="#07122B"/><rect x="90" y="26" width="8" height="8" fill="#07122B"/>
-            <rect x="106" y="26" width="8" height="8" fill="#07122B"/><rect x="114" y="34" width="8" height="8" fill="#07122B"/>
-            <rect x="98" y="42" width="8" height="8" fill="#07122B"/><rect x="90" y="50" width="8" height="8" fill="#07122B"/>
-            <rect x="106" y="50" width="8" height="8" fill="#07122B"/><rect x="90" y="66" width="8" height="8" fill="#07122B"/>
-            <rect x="114" y="58" width="8" height="8" fill="#07122B"/>
-            <rect x="10" y="90" width="8" height="8" fill="#07122B"/><rect x="34" y="90" width="8" height="8" fill="#07122B"/>
-            <rect x="58" y="90" width="8" height="8" fill="#07122B"/><rect x="18" y="98" width="8" height="8" fill="#07122B"/>
-            <rect x="42" y="98" width="8" height="8" fill="#07122B"/><rect x="58" y="106" width="8" height="8" fill="#07122B"/>
-            <rect x="10" y="114" width="8" height="8" fill="#07122B"/><rect x="26" y="114" width="8" height="8" fill="#07122B"/>
-            <rect x="50" y="106" width="8" height="8" fill="#07122B"/><rect x="42" y="114" width="8" height="8" fill="#07122B"/>
-            <rect x="90" y="90" width="8" height="8" fill="#07122B"/><rect x="114" y="90" width="8" height="8" fill="#07122B"/>
-            <rect x="138" y="90" width="8" height="8" fill="#07122B"/><rect x="162" y="90" width="8" height="8" fill="#07122B"/>
-            <rect x="178" y="90" width="8" height="8" fill="#07122B"/><rect x="98" y="98" width="8" height="8" fill="#07122B"/>
-            <rect x="122" y="98" width="8" height="8" fill="#07122B"/><rect x="146" y="98" width="8" height="8" fill="#07122B"/>
-            <rect x="106" y="106" width="8" height="8" fill="#07122B"/><rect x="130" y="106" width="8" height="8" fill="#07122B"/>
-            <rect x="170" y="106" width="8" height="8" fill="#07122B"/><rect x="90" y="114" width="8" height="8" fill="#07122B"/>
-            <rect x="114" y="114" width="8" height="8" fill="#07122B"/><rect x="154" y="114" width="8" height="8" fill="#07122B"/>
-            <rect x="178" y="114" width="8" height="8" fill="#07122B"/>
-            <rect x="90" y="130" width="8" height="8" fill="#07122B"/><rect x="114" y="138" width="8" height="8" fill="#07122B"/>
-            <rect x="130" y="130" width="8" height="8" fill="#07122B"/><rect x="154" y="130" width="8" height="8" fill="#07122B"/>
-            <rect x="170" y="138" width="8" height="8" fill="#07122B"/><rect x="98" y="146" width="8" height="8" fill="#07122B"/>
-            <rect x="122" y="146" width="8" height="8" fill="#07122B"/><rect x="146" y="146" width="8" height="8" fill="#07122B"/>
-            <rect x="178" y="146" width="8" height="8" fill="#07122B"/><rect x="90" y="154" width="8" height="8" fill="#07122B"/>
-            <rect x="106" y="154" width="8" height="8" fill="#07122B"/><rect x="130" y="154" width="8" height="8" fill="#07122B"/>
-            <rect x="162" y="154" width="8" height="8" fill="#07122B"/><rect x="98" y="162" width="8" height="8" fill="#07122B"/>
-            <rect x="122" y="162" width="8" height="8" fill="#07122B"/><rect x="146" y="162" width="8" height="8" fill="#07122B"/>
-            <rect x="170" y="162" width="8" height="8" fill="#07122B"/>
-            <rect x="88" y="88" width="24" height="24" rx="4" fill="#00C2FF"/>
-            <text x="100" y="105" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="900" fill="white">W</text>
-          </svg>
-        </div>
-        <div class="qr-url">wem-puce.vercel.app → Select Driver</div>
-        <a href="https://wem-puce.vercel.app/" target="_blank" class="qr-open">Open Driver App ↗</a>
+      <div class="qrc driver">
+        <div class="qrc-t">Driver App</div>
+        <div class="qrc-s">See driver earnings, accept rides, Safety Hub, and Claude driver support.</div>
+        <div class="qr-box"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="white"/><rect x="10" y="10" width="60" height="60" fill="none" stroke="#07122B" stroke-width="8"/><rect x="24" y="24" width="32" height="32" fill="#07122B"/><rect x="130" y="10" width="60" height="60" fill="none" stroke="#07122B" stroke-width="8"/><rect x="144" y="24" width="32" height="32" fill="#07122B"/><rect x="10" y="130" width="60" height="60" fill="none" stroke="#07122B" stroke-width="8"/><rect x="24" y="144" width="32" height="32" fill="#07122B"/><rect x="90" y="10" width="8" height="8" fill="#07122B"/><rect x="114" y="10" width="8" height="8" fill="#07122B"/><rect x="98" y="18" width="8" height="8" fill="#07122B"/><rect x="90" y="26" width="8" height="8" fill="#07122B"/><rect x="106" y="26" width="8" height="8" fill="#07122B"/><rect x="114" y="34" width="8" height="8" fill="#07122B"/><rect x="98" y="42" width="8" height="8" fill="#07122B"/><rect x="90" y="50" width="8" height="8" fill="#07122B"/><rect x="106" y="50" width="8" height="8" fill="#07122B"/><rect x="90" y="66" width="8" height="8" fill="#07122B"/><rect x="114" y="58" width="8" height="8" fill="#07122B"/><rect x="10" y="90" width="8" height="8" fill="#07122B"/><rect x="34" y="90" width="8" height="8" fill="#07122B"/><rect x="58" y="90" width="8" height="8" fill="#07122B"/><rect x="18" y="98" width="8" height="8" fill="#07122B"/><rect x="42" y="98" width="8" height="8" fill="#07122B"/><rect x="58" y="106" width="8" height="8" fill="#07122B"/><rect x="10" y="114" width="8" height="8" fill="#07122B"/><rect x="26" y="114" width="8" height="8" fill="#07122B"/><rect x="50" y="106" width="8" height="8" fill="#07122B"/><rect x="42" y="114" width="8" height="8" fill="#07122B"/><rect x="90" y="90" width="8" height="8" fill="#07122B"/><rect x="114" y="90" width="8" height="8" fill="#07122B"/><rect x="138" y="90" width="8" height="8" fill="#07122B"/><rect x="162" y="90" width="8" height="8" fill="#07122B"/><rect x="178" y="90" width="8" height="8" fill="#07122B"/><rect x="98" y="98" width="8" height="8" fill="#07122B"/><rect x="122" y="98" width="8" height="8" fill="#07122B"/><rect x="146" y="98" width="8" height="8" fill="#07122B"/><rect x="106" y="106" width="8" height="8" fill="#07122B"/><rect x="130" y="106" width="8" height="8" fill="#07122B"/><rect x="170" y="106" width="8" height="8" fill="#07122B"/><rect x="90" y="114" width="8" height="8" fill="#07122B"/><rect x="114" y="114" width="8" height="8" fill="#07122B"/><rect x="154" y="114" width="8" height="8" fill="#07122B"/><rect x="178" y="114" width="8" height="8" fill="#07122B"/><rect x="90" y="130" width="8" height="8" fill="#07122B"/><rect x="114" y="138" width="8" height="8" fill="#07122B"/><rect x="130" y="130" width="8" height="8" fill="#07122B"/><rect x="154" y="130" width="8" height="8" fill="#07122B"/><rect x="170" y="138" width="8" height="8" fill="#07122B"/><rect x="98" y="146" width="8" height="8" fill="#07122B"/><rect x="122" y="146" width="8" height="8" fill="#07122B"/><rect x="146" y="146" width="8" height="8" fill="#07122B"/><rect x="178" y="146" width="8" height="8" fill="#07122B"/><rect x="90" y="154" width="8" height="8" fill="#07122B"/><rect x="106" y="154" width="8" height="8" fill="#07122B"/><rect x="130" y="154" width="8" height="8" fill="#07122B"/><rect x="162" y="154" width="8" height="8" fill="#07122B"/><rect x="98" y="162" width="8" height="8" fill="#07122B"/><rect x="122" y="162" width="8" height="8" fill="#07122B"/><rect x="146" y="162" width="8" height="8" fill="#07122B"/><rect x="170" y="162" width="8" height="8" fill="#07122B"/><rect x="88" y="88" width="24" height="24" rx="4" fill="#00C2FF"/><text x="100" y="105" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="900" fill="white">W</text></svg></div>
+        <div class="qr-url">wem-puce.vercel.app/driver/home</div>
+        <a href="https://wem-puce.vercel.app/driver/home" target="_blank" class="qr-btn">Open Driver App ↗</a>
       </div>
     </div>
-
-    <!-- Feature guide -->
-    <div class="qr-guide">
-      <div class="qr-guide-label">What to explore</div>
-      <div class="feature-list" id="featList">
-        <!-- injected by JS -->
-      </div>
+    <div class="feat-guide">
+      <div class="feat-label">What to explore</div>
+      <div class="feat-list" id="featList"></div>
     </div>
-
-    <div class="stats-bar">
-      <div class="stat"><div class="stat-n">8</div><div class="stat-l">Safety layers every ride</div></div>
-      <div class="stat"><div class="stat-n" style="color:var(--green)">75%</div><div class="stat-l">Driver base pay Year 1</div></div>
-      <div class="stat"><div class="stat-n" style="color:var(--cyan)">✦</div><div class="stat-l">Claude AI integrated</div></div>
-      <div class="stat"><div class="stat-n" style="color:var(--amber)">$0</div><div class="stat-l">Surge fees with Wem Pass</div></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n">8</div><div class="stat-l">Safety layers</div></div>
+      <div class="stat"><div class="stat-n" style="color:var(--green)">75%</div><div class="stat-l">Driver base pay Y1</div></div>
+      <div class="stat"><div class="stat-n" style="color:var(--cyan)">✦</div><div class="stat-l">Claude AI</div></div>
+      <div class="stat"><div class="stat-n" style="color:var(--amber)">$0</div><div class="stat-l">Surge w/ Pass</div></div>
     </div>
-
     <div class="demo-footer">
-      <strong style="color:var(--text)">Wem</strong> · WEM Concept &amp; Design LLC · Tarrant County, TX<br>
+      <strong style="color:var(--text)">Wem</strong> · WEM Concept &amp; Design LLC · Tarrant County TX<br>
       <a href="https://wem-puce.vercel.app">wem-puce.vercel.app</a>
     </div>
   </div>
 </section>
 
 <script>
-// ── Data ──────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// TOUR STEPS
+// phone: 'rider' | 'driver'
+// side:  'right' (callout appears to the right of the phone, arrow points left)
+//         'left'  (callout appears to the left of the phone, arrow points right)
+// top:   vertical offset from top of phone wrapper in px
+// ─────────────────────────────────────────────
 const STEPS = [
-  { num:1, title:'8-Layer Safety System', badge:'b-safety', badgeTxt:'SAFETY FIRST',
-    desc:'Every Wem ride includes dash cam recording, live route monitoring, one-tap SOS, Claude AI check-ins, car verification, trusted contact sharing, guest safety link, and background-checked drivers.' },
-  { num:2, title:'Claude AI Built In', badge:'b-ai', badgeTxt:'ANTHROPIC',
-    desc:'Riders book conversationally — just tell Claude where to go. Claude also monitors rides, sends mid-ride check-ins, and provides instant support. Try it: tap the Claude button in the rider app.' },
-  { num:3, title:'Guest Safety Link', badge:'b-unique', badgeTxt:'UNIQUE TO WEM',
-    desc:'Book for someone without the app. They get an SMS link with live tracking, car verification, SOS, and Claude check-ins. No download needed. Link expires when the ride ends.' },
-  { num:4, title:'Driver Earnings', badge:'b-driver', badgeTxt:'HIGHEST IN DFW',
-    desc:'75% base pay Year 1 → 78% Year 2. Gas adjustment ($0.15/mi) and tips go 100% to drivers. Pickup compensation for longer pickups. Check it in the driver earnings screen.' },
-  { num:5, title:'Wem Pass', badge:'b-ai', badgeTxt:'$14.99/MO',
-    desc:'Subscribers pay no surge, gas adjustment, or pickup fees. Wem absorbs the difference so drivers still get paid in full.' },
-  { num:6, title:'Female Driver Option', badge:'b-pink', badgeTxt:'OPTIONAL',
-    desc:'Female riders can request a female driver. Wem matches based on preference. Available in the classic booking flow — tap the driver preference step.' },
-  { num:7, title:'Background Checked', badge:'b-safety', badgeTxt:'EVERY DRIVER',
-    desc:'Every Wem driver passes a background check before their first ride. Badge visible on the active ride screen so riders always know their driver is verified.' },
+  { phone:'rider', side:'right', top:100,
+    title:'Safety Hub',
+    desc:'Tap the blue Safety Hub card — 8 active layers of protection on every ride. Dash cam, SOS, AI monitoring.',
+    badge:'b-safety', badgeTxt:'8 ACTIVE LAYERS' },
+
+  { phone:'rider', side:'right', top:280,
+    title:'Book with Claude AI',
+    desc:'Tap the Claude button in the bottom nav. Tell Claude where you want to go in plain English.',
+    badge:'b-ai', badgeTxt:'POWERED BY ANTHROPIC' },
+
+  { phone:'rider', side:'right', top:220,
+    title:'Classic Booking',
+    desc:'Tap the "Where to?" search bar to book step by step — pick a destination, choose Standard, XL or Noir, then confirm.',
+    badge:'b-ai', badgeTxt:'3 TIERS' },
+
+  { phone:'rider', side:'right', top:160,
+    title:'Guest Safety Link',
+    desc:'Booking for someone else? They get a secure SMS link with live tracking and SOS — no app download needed.',
+    badge:'b-unique', badgeTxt:'UNIQUE TO WEM' },
+
+  { phone:'driver', side:'left', top:100,
+    title:'Driver Safety Hub',
+    desc:'Tap the blue Safety Hub card at the top. Dash cam toggle, route monitor, and a 3-second SOS countdown.',
+    badge:'b-safety', badgeTxt:'DRIVER PROTECTED' },
+
+  { phone:'driver', side:'left', top:280,
+    title:'Driver Earnings',
+    desc:'75% base pay in Year 1, rising to 78% in Year 2. Gas adjustment and tips go 100% to the driver.',
+    badge:'b-driver', badgeTxt:'HIGHEST IN DFW' },
+
+  { phone:'driver', side:'left', top:380,
+    title:'Accept a Ride',
+    desc:'Toggle online — a ride request slides up with pickup distance, route, and earnings breakdown. 15-second timer.',
+    badge:'b-ai', badgeTxt:'LIVE DEMO' },
+
+  { phone:'rider', side:'right', top:340,
+    title:'Female Driver Option',
+    desc:'Female riders can request a female driver during booking. Available in the classic booking flow.',
+    badge:'b-pink', badgeTxt:'OPTIONAL' },
 ];
 
 const FEATS = [
-  { icon:'🛡️', bg:'rgba(48,209,88,0.1)', title:'Open the Rider App → tap Safety Hub', badge:'b-safety', badgeTxt:'SAFETY FIRST',
-    desc:'See all 8 active safety layers. Toggle dash cam and route monitoring. The pulsing SOS button is always ready.' },
-  { icon:'✦', bg:'rgba(10,132,255,0.1)', title:'Tap the Claude button (center nav)', badge:'b-ai', badgeTxt:'CLAUDE AI',
-    desc:'Ask Claude where you want to go. It understands natural language — try "home" or "take me to the airport".' },
-  { icon:'🚘', bg:'rgba(10,132,255,0.08)', title:'Book a Classic Ride', badge:'b-ai', badgeTxt:'STEP BY STEP',
-    desc:'Tap the search bar on the home screen. Pick a destination, choose a tier (Standard, XL, or Noir), select driver preferences, then confirm.' },
-  { icon:'🔗', bg:'rgba(0,229,255,0.08)', title:'Try the Guest Safety Link', badge:'b-unique', badgeTxt:'UNIQUE TO WEM',
-    desc:'During booking, tap "Book for someone else". Enter their number — they receive a secure live-tracking link with no app download needed.' },
-  { icon:'💰', bg:'rgba(255,214,10,0.08)', title:'Open the Driver App → check Earnings', badge:'b-driver', badgeTxt:'DRIVER PAY',
-    desc:'See the weekly earnings chart, pay breakdown (75% base, gas adj, tips), and the ride acceptance flow with a 15-second countdown.' },
-  { icon:'📋', bg:'rgba(255,107,157,0.08)', title:'Driver App → tap Safety Hub', badge:'b-safety', badgeTxt:'DRIVER SAFETY',
-    desc:'Driver-specific safety: dash cam toggle, route monitor, 3-second SOS countdown, and incident reporting.' },
+  { icon:'🛡️', bg:'rgba(48,209,88,.1)', title:'Rider App → Safety Hub (top of home screen)',
+    badge:'b-safety', badgeTxt:'SAFETY FIRST',
+    desc:'See all 8 active safety layers. Toggle dash cam and route monitoring. Pulsing SOS button always ready.' },
+  { icon:'✦', bg:'rgba(10,132,255,.1)', title:'Tap the Claude button (center nav)',
+    badge:'b-ai', badgeTxt:'CLAUDE AI',
+    desc:'Ask Claude where to go in plain English. Try "take me home" or "I need a ride to the airport".' },
+  { icon:'🚘', bg:'rgba(10,132,255,.08)', title:'Tap "Where to?" to book a Classic Ride',
+    badge:'b-ai', badgeTxt:'STEP BY STEP',
+    desc:'Pick destination, choose tier (Standard / XL / Noir), select driver preference, then confirm.' },
+  { icon:'🔗', bg:'rgba(0,229,255,.08)', title:'During booking → "Book for someone else"',
+    badge:'b-unique', badgeTxt:'UNIQUE TO WEM',
+    desc:'Enter their number. They get a secure live-tracking link — no app download required.' },
+  { icon:'💰', bg:'rgba(255,214,10,.08)', title:'Driver App → Earnings screen',
+    badge:'b-driver', badgeTxt:'DRIVER PAY',
+    desc:'Weekly earnings chart, 75% base pay breakdown, gas adjustment, and tip tracking.' },
+  { icon:'📋', bg:'rgba(255,107,157,.08)', title:'Driver App → Safety Hub',
+    badge:'b-safety', badgeTxt:'DRIVER SAFETY',
+    desc:'Dash cam toggle, route monitor, 3-second SOS countdown, and incident reporting.' },
 ];
 
-// ── View switching ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let current = 0;
+let paused  = false;
+let ticker  = null;
+let tickMs  = 0;
+const STEP_DURATION = 6000; // ms per step
+
+// ─────────────────────────────────────────────
+// VIEW SWITCHING
+// ─────────────────────────────────────────────
 function showView(v) {
-  document.getElementById('landing').style.display = v==='landing' ? 'flex' : 'none';
-  document.getElementById('godView').style.display  = v==='god'     ? 'flex' : 'none';
-  document.getElementById('qrView').style.display   = v==='qr'      ? 'flex' : 'none';
+  document.getElementById('landing').style.display  = v==='landing' ? 'flex'   : 'none';
+  document.getElementById('godView').style.display  = v==='god'     ? 'flex'   : 'none';
+  document.getElementById('qrView').style.display   = v==='qr'      ? 'flex'   : 'none';
+  document.getElementById('tourBar').classList.toggle('hidden', v !== 'god');
   window.scrollTo(0,0);
+  if(v === 'god') startTour();
+  else            stopTour();
 }
 
-// ── God View guide ─────────────────────────────────────────────────────────
-let godCurrent = 0;
+// ─────────────────────────────────────────────
+// BUILD CALLOUTS
+// ─────────────────────────────────────────────
+function buildCallouts() {
+  STEPS.forEach((s, i) => {
+    const phone  = document.getElementById(s.phone === 'rider' ? 'riderPhone' : 'driverPhone');
+    const isDriver = s.phone === 'driver';
+    const el = document.createElement('div');
+    el.id = `callout-${i}`;
+    el.className = `callout${isDriver ? ' driver-side' : ''} arr-${s.side === 'right' ? 'right' : 'left'}`;
 
-function buildGodSteps() {
-  const container = document.getElementById('godSteps');
-  container.innerHTML = STEPS.map((s,i) => `
-    <div class="g-step${i===0?' active':''}" onclick="godSet(${i})">
-      <div class="g-step-num">${i<godCurrent?'✓':s.num}</div>
-      <div class="g-step-body">
-        <div class="g-step-title">${s.title}</div>
-        <div class="g-step-desc">${s.desc}<br><span class="g-badge ${s.badge}">${s.badgeTxt}</span></div>
-      </div>
-    </div>
-  `).join('');
-}
+    // Position: on right side of rider phone, on left side of driver phone
+    const pfWidth = 320; // phone frame width
+    if (s.side === 'right') {
+      // Callout floats to the right of the phone
+      el.style.left  = (pfWidth + 20) + 'px';
+    } else {
+      // Callout floats to the left of the phone
+      el.style.right = (pfWidth + 20) + 'px';
+    }
+    el.style.top = (s.top + 32) + 'px'; // +32 for chip label above phone
 
-function godSet(idx) {
-  godCurrent = idx;
-  const steps = document.querySelectorAll('.g-step');
-  steps.forEach((s,i) => {
-    s.className = 'g-step' + (i===idx?' active':(i<idx?' done':''));
-    s.querySelector('.g-step-num').textContent = i < idx ? '✓' : STEPS[i].num;
+    el.innerHTML = `
+      <div class="co-step">STEP ${i+1} OF ${STEPS.length}</div>
+      <div class="co-title">${s.title}</div>
+      <div class="co-desc">${s.desc}</div>
+      <span class="co-badge ${s.badge}">${s.badgeTxt}</span>
+    `;
+    phone.style.position = 'relative';
+    phone.appendChild(el);
   });
-  document.getElementById('godCount').textContent = `${idx+1} / ${STEPS.length}`;
-  steps[idx].scrollIntoView({behavior:'smooth',block:'nearest'});
 }
-function godNext() { if(godCurrent < STEPS.length-1) godSet(godCurrent+1); }
-function godPrev() { if(godCurrent > 0) godSet(godCurrent-1); }
 
-// ── QR feature list ────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// BUILD TOUR BAR DOTS
+// ─────────────────────────────────────────────
+function buildTourBar() {
+  const dots = document.getElementById('tbDots');
+  dots.innerHTML = '';
+  STEPS.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'tb-dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    d.style.cursor = 'pointer';
+    dots.appendChild(d);
+  });
+}
+
+// ─────────────────────────────────────────────
+// TOUR CONTROL
+// ─────────────────────────────────────────────
+function startTour() {
+  buildCallouts();
+  buildTourBar();
+  goTo(0);
+  scheduleNext();
+}
+
+function stopTour() {
+  clearInterval(ticker);
+  ticker = null;
+}
+
+function scheduleNext() {
+  clearInterval(ticker);
+  tickMs = 0;
+  ticker = setInterval(() => {
+    if (paused) return;
+    tickMs += 50;
+    // Update ring progress
+    const pct = tickMs / STEP_DURATION;
+    const offset = 82 - (82 * pct);
+    document.getElementById('tbRingFill').style.strokeDashoffset = offset;
+    if (tickMs >= STEP_DURATION) tourNext();
+  }, 50);
+}
+
+function goTo(idx) {
+  // Hide all callouts
+  document.querySelectorAll('.callout').forEach(el => el.classList.remove('visible'));
+  // Show current
+  const el = document.getElementById(`callout-${idx}`);
+  if (el) el.classList.add('visible');
+  // Update dots
+  document.querySelectorAll('.tb-dot').forEach((d,i) => d.classList.toggle('active', i===idx));
+  // Update label
+  document.getElementById('tbLabel').textContent = STEPS[idx].title;
+  // Reset ring
+  document.getElementById('tbRingFill').style.strokeDashoffset = 82;
+  current = idx;
+  scheduleNext();
+}
+
+function tourNext() { goTo((current + 1) % STEPS.length); }
+function tourPrev() { goTo((current - 1 + STEPS.length) % STEPS.length); }
+
+function togglePause() {
+  paused = !paused;
+  document.getElementById('tbIcon').textContent = paused ? '▶' : '⏸';
+}
+
+// Build QR feature list
 function buildFeats() {
   document.getElementById('featList').innerHTML = FEATS.map(f => `
     <div class="feat">
-      <div class="feat-icon" style="background:${f.bg}">${f.icon}</div>
+      <div class="feat-ico" style="background:${f.bg}">${f.icon}</div>
       <div class="feat-body">
-        <div class="feat-title">${f.title}</div>
-        <div class="feat-desc">${f.desc}</div>
+        <div class="feat-t">${f.title}</div>
+        <div class="feat-d">${f.desc}</div>
         <span class="feat-badge ${f.badge}">${f.badgeTxt}</span>
       </div>
     </div>
   `).join('');
 }
 
-// ── Init ───────────────────────────────────────────────────────────────────
-showView('landing');
-buildGodSteps();
-buildFeats();
-
+// ─────────────────────────────────────────────
+// KEYBOARD
+// ─────────────────────────────────────────────
 document.addEventListener('keydown', e => {
-  const god = document.getElementById('godView').style.display !== 'none';
-  if(god) {
-    if(e.key==='ArrowRight'||e.key==='ArrowDown') godNext();
-    if(e.key==='ArrowLeft'||e.key==='ArrowUp') godPrev();
-  }
+  if(document.getElementById('godView').style.display === 'none') return;
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') tourNext();
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')   tourPrev();
+  if(e.key===' ') togglePause();
 });
+
+// Init
+showView('landing');
+buildFeats();
 </script>
 </body>
 </html>

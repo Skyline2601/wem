@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "WemApp",
+    "slug": "wemapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.wem.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Wem uses your location to match you with nearby drivers and show your position on the map.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Wem uses your location during rides to monitor your route and ensure your safety.",
+        "NSMicrophoneUsageDescription": "Wem uses your microphone for the driver voice SOS feature."
+      }
+    },
+    "android": {
+      "package": "com.wem.app",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "scheme": "wem",
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

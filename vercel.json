@@ -1,15 +1,8 @@
 {
-  "buildCommand": "npx expo export --platform web",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": null,
   "rewrites": [
-    {
-      "source": "/demo",
-      "destination": "/demo.html"
-    },
-    {
-      "source": "/((?!.*\\.).*)",
-      "destination": "/index.html"
-    }
+    { "source": "/((?!.*\\.).*)", "destination": "/index.html" }
   ]
 }

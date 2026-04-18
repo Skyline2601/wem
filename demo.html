@@ -70,7 +70,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;
 
 /* Callout card sits ABOVE the phone, arrow points DOWN to it */
 .callout{
-  width:260px;border-radius:16px 16px 0 0;padding:16px 18px 20px;
+  width:320px;border-radius:16px 16px 0 0;padding:16px 18px 20px;
   position:relative;transition:all .4s;
 }
 .callout.rider-co{
@@ -107,22 +107,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;
 .pchip.driver{background:rgba(0,229,255,.08);color:var(--cyan);border:1px solid rgba(0,229,255,.22)}
 
 .pf{
-  width:260px;
-  height:563px;
-  border-radius:0 0 32px 32px;
+  width:320px;
+  /* iframe is 390px wide, scale = 320/390 = 0.8205 */
+  /* To show FULL app (844px tall): height = 844 * 0.8205 = 692px */
+  height:692px;
+  border-radius:0 0 38px 38px;  /* top corners square to connect to callout */
   border:1.5px solid var(--border);
   border-top:none;
   overflow:hidden;background:#000;
   box-shadow:0 24px 60px rgba(0,0,0,.6);
   flex-shrink:0;
-  position:relative;
 }
 .callout.rider-co ~ .pf{border-color:var(--brand)}
 .pf iframe{
-  position:absolute;
-  top:0;left:0;
   width:390px;height:844px;border:none;
-  transform:scale(0.667);
+  /* Scale so width fills frame: 320/390 = 0.8205 */
+  transform:scale(0.8205);
   transform-origin:top left;
 }
 .popen{font-size:11px;color:var(--sub);text-decoration:none;margin-top:8px;
@@ -207,10 +207,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;
   color:var(--muted);font-size:12px;line-height:1.8}
 .footer a{color:var(--brand);text-decoration:none}
 
-@media(max-width:640px){
-  .god-body{gap:16px}
-  .pf,.callout{width:240px}
-  .pf{height:520px}
+@media(max-width:760px){
+  .god-body{gap:24px}
+  .pf,.callout{width:280px}
+  .pf{height:606px} /* 280/390 * 844 = 606 */
+  .pf iframe{transform:scale(0.7179)}
 }
 @media(max-width:500px){
   .pf,.callout{width:300px}
@@ -279,7 +280,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;
         <div class="co-d"   id="dDesc">Drivers get their own Safety Hub — dash cam, route monitor, SOS.</div>
         <span class="co-badge b-safety" id="dBadge">DRIVER PROTECTED</span>
       </div>
-      <div class="pf" style="border-top:none;border-color:var(--cyan)" id="driverPf">
+      <div class="pf" style="border-color:var(--cyan)" id="driverPf">
         <iframe id="driverFrame" src="https://wem-puce.vercel.app/driver/home"
           loading="lazy" title="Driver App"></iframe>
       </div>

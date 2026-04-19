@@ -279,15 +279,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;
   <div class="god-body">
     <svg id="arrowOverlay" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:150;overflow:visible">
       <defs>
-        <marker id="arrowR" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
-          <path d="M0,0 L10,5 L0,10 Z" fill="#0A84FF"/>
+        <!-- Tip points RIGHT — used at START of path when path goes left→right -->
+        <marker id="tipR" markerWidth="12" markerHeight="10" refX="0" refY="5" orient="auto">
+          <path d="M0,0 L12,5 L0,10 Z" fill="#0A84FF"/>
         </marker>
-        <marker id="arrowL" markerWidth="10" markerHeight="10" refX="1" refY="5" orient="auto">
-          <path d="M10,0 L0,5 L10,10 Z" fill="#00E5FF"/>
+        <!-- Tip points LEFT — used at START of path when path goes right→left -->
+        <marker id="tipL" markerWidth="12" markerHeight="10" refX="12" refY="5" orient="auto">
+          <path d="M12,0 L0,5 L12,10 Z" fill="#00E5FF"/>
         </marker>
       </defs>
-      <path id="rArrowPath" fill="none" stroke="#0A84FF" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrowR)" opacity="1"/>
-      <path id="dArrowPath" fill="none" stroke="#00E5FF" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrowL)" opacity="0.2"/>
+      <!-- Rider: path FROM callout(left) TO phone(right), tip at END = marker-end tipR -->
+      <path id="rArrowPath" fill="none" stroke="#0A84FF" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#tipR)" opacity="1"/>
+      <!-- Driver: path FROM callout(right) TO phone(left), tip at END pointing LEFT -->
+      <!-- But we draw FROM phone-right TO callout-left, so tip is at START = marker-start tipL -->
+      <path id="dArrowPath" fill="none" stroke="#00E5FF" stroke-width="2" stroke-dasharray="5,4" marker-start="url(#tipL)" opacity="0.2"/>
     </svg>
 
     <!-- RIDER: callout LEFT + arrow + phone RIGHT -->
@@ -546,27 +551,27 @@ function updateArrow(pathId, calloutEl, phoneEl, featureY, direction) {
   if(!calloutEl || !phoneEl || !path) return;
   const cRect = calloutEl.getBoundingClientRect();
   const pRect = phoneEl.getBoundingClientRect();
+  const fy = Math.max(0.06, Math.min(0.94, featureY));
+  const phoneY = pRect.top + pRect.height * fy;
+  const calloutY = cRect.top + cRect.height * 0.45;
 
-  let startX, endX;
+  let d;
   if(direction === 'right') {
-    // Rider: callout on LEFT, arrow goes RIGHT to phone
-    startX = cRect.right;
-    endX   = pRect.left + 6;
+    // RIDER: callout LEFT → phone RIGHT
+    // Path: callout-right → phone-left, arrowhead at phone (marker-end)
+    const sx = cRect.right + 4;
+    const ex = pRect.left - 4;
+    const dx = (ex - sx) * 0.5;
+    d = `M${sx},${calloutY} C${sx+dx},${calloutY} ${ex-dx},${phoneY} ${ex},${phoneY}`;
   } else {
-    // Driver: callout on RIGHT, arrow goes LEFT to phone
-    startX = cRect.left;
-    endX   = pRect.right - 6;
+    // DRIVER: callout RIGHT, phone LEFT
+    // Draw path FROM phone-right TO callout-left so marker-start tip is at phone
+    const sx = pRect.right + 4;  // start at phone right edge
+    const ex = cRect.left - 4;   // end at callout left edge
+    const dx = (ex - sx) * 0.5;  // dx is negative (going left)
+    d = `M${sx},${phoneY} C${sx+dx},${phoneY} ${ex-dx},${calloutY} ${ex},${calloutY}`;
   }
-  const startY = cRect.top + cRect.height * 0.45;
-  const endY   = pRect.top + pRect.height * Math.max(0.05, Math.min(0.95, featureY));
-
-  const dx = Math.abs(endX - startX) * 0.45;
-  const cp1x = direction === 'right' ? startX + dx : startX - dx;
-  const cp2x = direction === 'right' ? endX   - dx : endX   + dx;
-
-  path.setAttribute('d',
-    `M${startX},${startY} C${cp1x},${startY} ${cp2x},${endY} ${endX},${endY}`
-  );
+  path.setAttribute('d', d);
 }
 
 function goTo(idx){

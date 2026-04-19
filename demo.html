@@ -103,10 +103,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;
 .co.dim{opacity:.15;transform:scale(.97);pointer-events:none}
 
 /* Arrow connector — SVG drawn between callout and phone */
-.arrow-svg{
-  flex-shrink:0;align-self:center;
-  overflow:visible;
-}
 
 .co-num{font-size:9px;font-weight:800;letter-spacing:.8px;color:var(--muted);margin-bottom:5px}
 .co-t{font-size:13px;font-weight:800;line-height:1.3;margin-bottom:5px}
@@ -281,6 +277,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;
   </div>
 
   <div class="god-body">
+    <svg id="arrowOverlay" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:150;overflow:visible">
+      <defs>
+        <marker id="arrowR" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+          <path d="M0,0 L10,5 L0,10 Z" fill="#0A84FF"/>
+        </marker>
+        <marker id="arrowL" markerWidth="10" markerHeight="10" refX="1" refY="5" orient="auto">
+          <path d="M10,0 L0,5 L10,10 Z" fill="#00E5FF"/>
+        </marker>
+      </defs>
+      <path id="rArrowPath" fill="none" stroke="#0A84FF" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrowR)" opacity="1"/>
+      <path id="dArrowPath" fill="none" stroke="#00E5FF" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrowL)" opacity="0.2"/>
+    </svg>
 
     <!-- RIDER: callout LEFT + arrow + phone RIGHT -->
     <div class="phone-unit rider">
@@ -290,21 +298,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;
         <div class="co-d"   id="rDesc">First thing a rider sees — 8 active safety layers.</div>
         <span class="co-badge b-safety" id="rBadge">8 ACTIVE LAYERS</span>
       </div>
-      <!-- Arrow: points right from callout toward phone feature -->
-      <svg class="arrow-svg" id="rArrow" width="36" height="60" viewBox="0 0 36 60">
-        <defs>
-          <marker id="ah-r" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
-            <path d="M0,0 L8,4 L0,8 Z" fill="#0A84FF"/>
-          </marker>
-        </defs>
-        <path id="rArrowPath" d="M4,30 C16,30 20,30 32,30"
-          fill="none" stroke="#0A84FF" stroke-width="2"
-          stroke-dasharray="4,3" marker-end="url(#ah-r)"
-          opacity="0.8"/>
-      </svg>
+
       <div class="phone-col">
         <span class="pchip rider">Rider App</span>
-        <div class="pf">
+        <div class="pf" id="riderPf">
           <iframe id="riderFrame" src="https://wem-puce.vercel.app/rider/home"
             loading="lazy" title="Rider"></iframe>
         </div>
@@ -320,21 +317,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;
         <div class="co-d"   id="dDesc">Dash cam, route monitor, SOS — all in one place.</div>
         <span class="co-badge b-safety" id="dBadge">DRIVER PROTECTED</span>
       </div>
-      <!-- Arrow: points left from callout toward phone feature -->
-      <svg class="arrow-svg" id="dArrow" width="36" height="60" viewBox="0 0 36 60">
-        <defs>
-          <marker id="ah-d" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
-            <path d="M8,0 L0,4 L8,8 Z" fill="#00E5FF"/>
-          </marker>
-        </defs>
-        <path id="dArrowPath" d="M32,30 C20,30 16,30 4,30"
-          fill="none" stroke="#00E5FF" stroke-width="2"
-          stroke-dasharray="4,3" marker-end="url(#ah-d)"
-          opacity="0.4"/>
-      </svg>
+
       <div class="phone-col">
         <span class="pchip driver">Driver App</span>
-        <div class="pf">
+        <div class="pf" id="driverPf">
           <iframe id="driverFrame" src="https://wem-puce.vercel.app/driver/home"
             loading="lazy" title="Driver"></iframe>
         </div>
@@ -554,28 +540,29 @@ function initTour(){
   goTo(0);
 }
 
-// Update SVG arrow to point at featureY position on phone
-function updateArrow(svgId, pathId, featureY, color, direction) {
-  const svg = document.getElementById(svgId);
+// Draw arrow from callout edge to feature position on phone
+function updateArrow(pathId, calloutEl, phoneEl, featureY, direction) {
   const path = document.getElementById(pathId);
-  const targetY = featureY * PH; // pixel position on phone
-  // Arrow SVG viewBox is 36x60, represents the gap between callout and phone
-  // We animate the curve to point at the right height
-  // The callout is vertically centered (so its center is at PH/2 from top of phone col)
-  // We draw from center of SVG (y=30) curving to featureY*PH relative to phone top
-  // Since phone starts at same Y as callout container top, offset = targetY - (PH/2)
-  const svgH = 80;
-  svg.setAttribute('height', svgH);
-  svg.setAttribute('viewBox', `0 0 36 ${svgH}`);
-  const midY = svgH / 2;
-  const endY = Math.max(8, Math.min(svgH-8, midY + (featureY - 0.5) * PH * 0.4));
-  if(direction === 'right') {
-    path.setAttribute('d', `M4,${midY} C14,${midY} 22,${endY} 32,${endY}`);
-    path.setAttribute('stroke', color);
-  } else {
-    path.setAttribute('d', `M32,${midY} C22,${midY} 14,${endY} 4,${endY}`);
-    path.setAttribute('stroke', color);
-  }
+  if(!calloutEl || !phoneEl || !path) return;
+
+  const cRect = calloutEl.getBoundingClientRect();
+  const pRect = phoneEl.getBoundingClientRect();
+
+  // Start: right edge of rider callout, or left edge of driver callout
+  // End: left/right edge of phone at featureY position
+  const startX = direction === 'right' ? cRect.right : cRect.left;
+  const startY = cRect.top + cRect.height * 0.4; // slightly above center
+  const endX   = direction === 'right' ? pRect.left + 4 : pRect.right - 4;
+  const endY   = pRect.top + pRect.height * featureY;
+
+  // Bezier control points — curve smoothly between callout and phone
+  const dx = Math.abs(endX - startX) * 0.5;
+  const cp1x = direction === 'right' ? startX + dx : startX - dx;
+  const cp2x = direction === 'right' ? endX   - dx : endX   + dx;
+
+  path.setAttribute('d',
+    `M${startX},${startY} C${cp1x},${startY} ${cp2x},${endY} ${endX},${endY}`
+  );
 }
 
 function goTo(idx){
@@ -601,20 +588,22 @@ function goTo(idx){
   const dc=document.getElementById('driverCo');
   const ra=document.getElementById('rArrow');
   const da=document.getElementById('dArrow');
-  if(s.active==='rider'){
-    rc.classList.remove('dim'); dc.classList.add('dim');
-    ra.style.opacity='1'; da.style.opacity='0.15';
-  } else if(s.active==='driver'){
-    rc.classList.add('dim'); dc.classList.remove('dim');
-    ra.style.opacity='0.15'; da.style.opacity='1';
-  } else {
-    rc.classList.remove('dim'); dc.classList.remove('dim');
-    ra.style.opacity='1'; da.style.opacity='1';
-  }
+  if(s.active==='rider')       { rc.classList.remove('dim'); dc.classList.add('dim'); }
+  else if(s.active==='driver') { rc.classList.add('dim');    dc.classList.remove('dim'); }
+  else                         { rc.classList.remove('dim'); dc.classList.remove('dim'); }
 
-  // Update arrows to point at correct feature location
-  updateArrow('rArrow','rArrowPath', s.featureY, '#0A84FF', 'right');
-  updateArrow('dArrow','dArrowPath', s.dY||s.featureY, '#00E5FF', 'left');
+  // Update arrows using real element positions
+  const rCallout = document.getElementById('riderCo');
+  const dCallout = document.getElementById('driverCo');
+  const rPhone   = document.getElementById('riderPf');
+  const dPhone   = document.getElementById('driverPf');
+
+  updateArrow('rArrowPath', rCallout, rPhone, s.featureY, 'right');
+  updateArrow('dArrowPath', dCallout, dPhone, s.dY||s.featureY, 'left');
+
+  // Dim/fade inactive arrow
+  document.getElementById('rArrowPath').style.opacity = s.active==='driver' ? '0.15' : '1';
+  document.getElementById('dArrowPath').style.opacity = s.active==='rider'  ? '0.15' : '1';
 
   // Navigate iframes
   const rf=document.getElementById('riderFrame');
@@ -667,6 +656,9 @@ document.addEventListener('keydown',e=>{
 });
 
 showView('landing');
+window.addEventListener('resize', () => {
+  if(document.getElementById('godView').style.display !== 'none') goTo(cur);
+});
 </script>
 </body>
 </html>

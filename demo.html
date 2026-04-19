@@ -69,7 +69,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;
 /* ── GOD VIEW ── */
 .god-body{
   flex:1;display:flex;justify-content:center;align-items:flex-start;
-  gap:60px;padding:32px 20px 100px;flex-wrap:wrap;
+  gap:80px;padding:32px 20px 100px;flex-wrap:wrap;
   background:radial-gradient(ellipse at 50% 20%,rgba(10,132,255,.04),transparent 60%);
 }
 
@@ -78,8 +78,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;
   display:flex;align-items:flex-start;gap:0;
   position:relative;
 }
-.phone-unit.rider{flex-direction:row}   /* callout LEFT, phone RIGHT */
-.phone-unit.driver{flex-direction:row-reverse} /* callout RIGHT, phone LEFT */
+.phone-unit.rider{flex-direction:row;gap:32px}   /* callout LEFT, phone RIGHT */
+.phone-unit.driver{flex-direction:row-reverse;gap:32px} /* callout RIGHT, phone LEFT */
 
 /* Callout card */
 .co{
@@ -544,19 +544,23 @@ function initTour(){
 function updateArrow(pathId, calloutEl, phoneEl, featureY, direction) {
   const path = document.getElementById(pathId);
   if(!calloutEl || !phoneEl || !path) return;
-
   const cRect = calloutEl.getBoundingClientRect();
   const pRect = phoneEl.getBoundingClientRect();
 
-  // Start: right edge of rider callout, or left edge of driver callout
-  // End: left/right edge of phone at featureY position
-  const startX = direction === 'right' ? cRect.right : cRect.left;
-  const startY = cRect.top + cRect.height * 0.4; // slightly above center
-  const endX   = direction === 'right' ? pRect.left + 4 : pRect.right - 4;
-  const endY   = pRect.top + pRect.height * featureY;
+  let startX, endX;
+  if(direction === 'right') {
+    // Rider: callout on LEFT, arrow goes RIGHT to phone
+    startX = cRect.right;
+    endX   = pRect.left + 6;
+  } else {
+    // Driver: callout on RIGHT, arrow goes LEFT to phone
+    startX = cRect.left;
+    endX   = pRect.right - 6;
+  }
+  const startY = cRect.top + cRect.height * 0.45;
+  const endY   = pRect.top + pRect.height * Math.max(0.05, Math.min(0.95, featureY));
 
-  // Bezier control points — curve smoothly between callout and phone
-  const dx = Math.abs(endX - startX) * 0.5;
+  const dx = Math.abs(endX - startX) * 0.45;
   const cp1x = direction === 'right' ? startX + dx : startX - dx;
   const cp2x = direction === 'right' ? endX   - dx : endX   + dx;
 
@@ -601,9 +605,11 @@ function goTo(idx){
   updateArrow('rArrowPath', rCallout, rPhone, s.featureY, 'right');
   updateArrow('dArrowPath', dCallout, dPhone, s.dY||s.featureY, 'left');
 
-  // Dim/fade inactive arrow
-  document.getElementById('rArrowPath').style.opacity = s.active==='driver' ? '0.15' : '1';
-  document.getElementById('dArrowPath').style.opacity = s.active==='rider'  ? '0.15' : '1';
+  // Fade inactive arrow
+  const rp = document.getElementById('rArrowPath');
+  const dp = document.getElementById('dArrowPath');
+  if(rp) rp.style.opacity = s.active==='driver' ? '0.1' : '0.9';
+  if(dp) dp.style.opacity = s.active==='rider'  ? '0.1' : '0.9';
 
   // Navigate iframes
   const rf=document.getElementById('riderFrame');

@@ -522,10 +522,16 @@ function showView(v){
   document.getElementById('landing').style.display='none';
   document.getElementById('godView').style.display='none';
   document.getElementById('qrView').style.display='none';
-  document.getElementById(v==='landing'?'landing':v==='god'?'godView':'qrView').style.display='flex';
-  document.getElementById('tbar').classList.toggle('hidden',v!=='god');
+  const target = v==='landing' ? 'landing' : v==='god' ? 'godView' : 'qrView';
+  document.getElementById(target).style.display='flex';
+  document.getElementById('tbar').classList.toggle('hidden', v!=='god');
   window.scrollTo(0,0);
-  if(v==='god') initTour(); else stopTour();
+  if(v==='god'){
+    // Delay initTour until DOM has painted and elements have real dimensions
+    requestAnimationFrame(() => requestAnimationFrame(() => initTour()));
+  } else {
+    stopTour();
+  }
 }
 
 function initTour(){
@@ -537,7 +543,7 @@ function initTour(){
 }
 
 // Draw arrow from callout edge to feature position on phone
-function updateArrow(pathId, calloutEl, phoneEl, featureY, direction) {
+function updateArrow(pathId, calloutEl, phoneEl, featureY, direction) { try {
   const path = document.getElementById(pathId);
   if(!calloutEl || !phoneEl || !path) return;
   const cRect = calloutEl.getBoundingClientRect();
@@ -563,6 +569,7 @@ function updateArrow(pathId, calloutEl, phoneEl, featureY, direction) {
     d = `M${sx},${phoneY} C${sx+dx},${phoneY} ${ex-dx},${calloutY} ${ex},${calloutY}`;
   }
   path.setAttribute('d', d);
+  } catch(e) { /* element not yet visible */ }
 }
 
 function goTo(idx){

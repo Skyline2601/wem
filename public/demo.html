@@ -413,105 +413,95 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;
 // featureY = 0..1, vertical position of the feature in the phone (0=top, 1=bottom)
 // active: 'rider'|'driver'|'both'
 const STEPS = [
-  { active:'rider', featureY:0.18,
+  // 1. Safety Hub — the headline differentiator
+  { active:'rider', featureY:0.22,
     riderUrl:'https://wem-puce.vercel.app/rider/home',
     driverUrl:'https://wem-puce.vercel.app/driver/home',
-    rT:'Safety Hub — First Thing You See',
-    rD:'The first card on the home screen. 8 active layers protecting every ride before you book.',
-    rB:'b-safety',rBT:'8 ACTIVE LAYERS',
-    dT:'Driver Home Screen',
-    dD:'Driver opens to earnings overview with Safety Hub at top.',
-    dB:'b-safety',dBT:'DRIVER READY',dY:0.18 },
+    rT:'Safety is our #1 priority',
+    rD:'Wem is the only DFW rideshare built safety-first. Every ride includes 8 active protection layers — before you even confirm.',
+    rB:'b-safety', rBT:'8 LAYERS — NO OTHER APP OFFERS THIS',
+    dT:'Driver Safety Too', dD:'Drivers get the same protection. Safety Hub is the first thing they see.',
+    dB:'b-safety', dBT:'DRIVERS PROTECTED', dY:0.22 },
 
-  { active:'rider', featureY:0.30,
-    riderUrl:'https://wem-puce.vercel.app/rider/home',
-    driverUrl:null,
-    rT:'Book a Ride',
-    rD:'Tap "Where to?" for step-by-step booking, or tap Claude to book by voice.',
-    rB:'b-ai',rBT:'2 WAYS TO BOOK',
-    dT:'Waiting for Ride',
-    dD:'Driver is online. Once a rider confirms, a request slides up.',
-    dB:'b-driver',dBT:'ONLINE',dY:0.5 },
-
-  { active:'rider', featureY:0.5,
-    riderUrl:'https://wem-puce.vercel.app/rider/classic',
-    driverUrl:null,
-    rT:'Step-by-Step Booking',
-    rD:'Destination → Standard, XL, or Noir → driver preferences → confirm.',
-    rB:'b-ai',rBT:'3 TIERS',
-    dT:'Ride Request Incoming',
-    dD:'Request slides up with route, earnings, and 15-second timer.',
-    dB:'b-driver',dBT:'15-SEC TIMER',dY:0.75 },
-
-  { active:'both', featureY:0.6,
-    riderUrl:'https://wem-puce.vercel.app/rider/classic',
-    driverUrl:'https://wem-puce.vercel.app/driver/home',
-    rT:'Female Driver Option',
-    rD:'During booking, female riders can request a female driver.',
-    rB:'b-pink',rBT:'OPTIONAL',
-    dT:'Driver Accepts',
-    dD:'Driver taps Accept — both apps immediately show the live route.',
-    dB:'b-driver',dBT:'RIDE ACCEPTED',dY:0.8 },
-
-  { active:'both', featureY:0.4,
-    riderUrl:'https://wem-puce.vercel.app/rider/active',
-    driverUrl:'https://wem-puce.vercel.app/driver/active',
-    rT:'Ride in Progress',
-    rD:'Live map, driver position, progress bar, and ETA. Claude checks in mid-ride.',
-    rB:'b-ai',rBT:'LIVE TRACKING',
-    dT:'Driver En Route',
-    dD:'Driver sees the route. Dash cam is recording. Route monitoring is active.',
-    dB:'b-safety',dBT:'DASH CAM ON',dY:0.4 },
-
-  { active:'rider', featureY:0.35,
-    riderUrl:'https://wem-puce.vercel.app/rider/active',
-    driverUrl:null,
-    rT:'Car Verification',
-    rD:'Driver arriving? See the car photo, plate, and color before getting in.',
-    rB:'b-safety',rBT:'VERIFY FIRST',
-    dT:'Background Checked',
-    dD:'Driver\'s background check badge visible to rider during active ride.',
-    dB:'b-safety',dBT:'VERIFIED',dY:0.35 },
-
-  { active:'rider', featureY:0.15,
-    riderUrl:'https://wem-puce.vercel.app/rider/active',
-    driverUrl:null,
-    rT:'"Almost There" Alert',
-    rD:'Phone vibrates and banner slides in near the destination — even if screen is locked.',
-    rB:'b-unique',rBT:'HAPTIC + VISUAL',
-    dT:'AI Route Monitoring',
-    dD:'Any unexpected route deviation triggers an alert on both sides.',
-    dB:'b-safety',dBT:'AI WATCHING',dY:0.5 },
-
-  { active:'driver', featureY:0.18,
-    riderUrl:null,
+  // 2. Dash cam — every ride recorded
+  { active:'rider', featureY:0.22,
+    riderUrl:'https://wem-puce.vercel.app/rider/safety',
     driverUrl:'https://wem-puce.vercel.app/driver/safety',
-    rT:'Guest Safety Link',
-    rD:'Booking for someone else? They get a secure SMS link — tracking and SOS included, no app needed.',
-    rB:'b-unique',rBT:'UNIQUE TO WEM',
-    dT:'Driver Safety Hub',
-    dD:'Dash cam toggle, route monitor, and 3-second silent SOS.',
-    dB:'b-safety',dBT:'SOS READY',dY:0.18 },
+    rT:'Every Ride is Recorded',
+    rD:'Dash cam activates automatically when a driver accepts. Footage is encrypted and stored 30 days. Uber and Lyft don't guarantee this.',
+    rB:'b-safety', rBT:'DASH CAM — ALWAYS ON',
+    dT:'Driver Dash Cam', dD:'Driver can see dash cam status and toggle route monitoring from their Safety Hub.',
+    dB:'b-safety', dBT:'RECORDING', dY:0.22 },
 
+  // 3. Route monitoring — AI watching
+  { active:'both', featureY:0.35,
+    riderUrl:'https://wem-puce.vercel.app/rider/safety',
+    driverUrl:'https://wem-puce.vercel.app/driver/safety',
+    rT:'AI Watches Every Route',
+    rD:'Claude monitors your route in real time. If the driver deviates unexpectedly, both the rider and Wem safety team are alerted instantly.',
+    rB:'b-ai', rBT:'AI ROUTE MONITOR',
+    dT:'Driver Route Monitor', dD:'Driver can toggle route monitoring. Any deviation alerts both sides.',
+    dB:'b-safety', dBT:'ACTIVE', dY:0.35 },
+
+  // 4. One-tap SOS
+  { active:'both', featureY:0.60,
+    riderUrl:'https://wem-puce.vercel.app/rider/safety',
+    driverUrl:'https://wem-puce.vercel.app/driver/safety',
+    rT:'One-Tap Silent SOS',
+    rD:'Hold 3 seconds — silently alerts Wem's safety team, shares your GPS, and contacts your emergency contact. No phone call needed.',
+    rB:'b-safety', rBT:'SILENT SOS',
+    dT:'Driver SOS', dD:'Drivers get their own SOS. 3-second hold, silent alert, instant GPS share.',
+    dB:'b-safety', dBT:'DRIVER SOS', dY:0.60 },
+
+  // 5. Guest Safety Link — unique to Wem
+  { active:'rider', featureY:0.22,
+    riderUrl:'https://wem-puce.vercel.app/rider/safety',
+    driverUrl:null,
+    rT:'Guest Safety Link',
+    rD:'Booking for someone else? They get a secure SMS link with live tracking, car verification, and SOS access — no app download required.',
+    rB:'b-unique', rBT:'UNIQUE TO WEM',
+    dT:'No Other App Does This', dD:'Lyft and Uber have no equivalent. Only Wem lets you extend safety to non-app users.',
+    dB:'b-unique', dBT:'FIRST IN DFW', dY:0.40 },
+
+  // 6. Claude AI check-ins mid-ride
+  { active:'rider', featureY:0.40,
+    riderUrl:'https://wem-puce.vercel.app/rider/active',
+    driverUrl:null,
+    rT:'Claude Checks In Mid-Ride',
+    rD:'Wem's AI checks in with you during every ride. No response? We follow up. Something wrong? We act. Powered by Anthropic.',
+    rB:'b-ai', rBT:'AI POWERED BY ANTHROPIC',
+    dT:'Real-Time AI Monitoring', dD:'Claude watches for anything unusual during the ride — on both sides.',
+    dB:'b-ai', dBT:'CLAUDE AI', dY:0.40 },
+
+  // 7. Car verification before entry
+  { active:'rider', featureY:0.55,
+    riderUrl:'https://wem-puce.vercel.app/rider/active',
+    driverUrl:null,
+    rT:'Verify Before You Get In',
+    rD:'Car photo, license plate, color, and make shown before the driver arrives. Never get in the wrong car again.',
+    rB:'b-safety', rBT:'CAR VERIFICATION',
+    dT:'Background Checked', dD:'Every driver passed a background check. Badge visible to rider throughout the ride.',
+    dB:'b-safety', dBT:'VERIFIED', dY:0.55 },
+
+  // 8. Background check on every driver
+  { active:'rider', featureY:0.55,
+    riderUrl:'https://wem-puce.vercel.app/rider/active',
+    driverUrl:'https://wem-puce.vercel.app/driver/profile',
+    rT:'Every Driver is Background Checked',
+    rD:'No driver completes a single ride without a background check. The verified badge is visible to the rider throughout every trip.',
+    rB:'b-safety', rBT:'BACKGROUND CHECKED — EVERY DRIVER',
+    dT:'Driver Verification Badge', dD:'Background check status shown on driver profile. Renewed automatically every 12 months.',
+    dB:'b-safety', dBT:'VERIFIED', dY:0.40 },
+
+  // 9. Driver pay — why drivers choose Wem
   { active:'driver', featureY:0.45,
     riderUrl:null,
     driverUrl:'https://wem-puce.vercel.app/driver/earnings',
-    rT:'Rider Tips Driver',
-    rD:'After every ride, 100% of tips go directly to the driver — Wem never takes a cut.',
-    rB:'b-driver',rBT:'100% TO DRIVER',
-    dT:'Driver Earnings',
-    dD:'75% base pay Year 1 → 78% Year 2. Gas adjustment ($0.15/mi) is 100% yours.',
-    dB:'b-driver',dBT:'HIGHEST IN DFW',dY:0.45 },
-
-  { active:'both', featureY:0.4,
-    riderUrl:'https://wem-puce.vercel.app/rider/safety',
-    driverUrl:'https://wem-puce.vercel.app/driver/safety',
-    rT:'Rider Safety Hub — All 8 Layers',
-    rD:'Dash cam · Route monitor · SOS · Claude check-ins · Car verify · Trusted contacts · Guest link · Background check.',
-    rB:'b-safety',rBT:'8 LAYERS',
-    dT:'Driver Safety Hub',
-    dD:'Dash cam toggle, route monitoring, 3-second SOS, incident reporting.',
-    dB:'b-safety',dBT:'DRIVER PROTECTED',dY:0.4 },
+    rT:'Why Drivers Choose Wem',
+    rD:'75% base pay Year 1 → 78% Year 2. Gas adjustment ($0.15/mi) and 100% of tips go directly to drivers. Highest pay in DFW.',
+    rB:'b-driver', rBT:'HIGHEST PAY IN DFW',
+    dT:'Driver Earnings', dD:'More drivers = shorter wait times = better experience for riders.',
+    dB:'b-driver', dBT:'75% BASE PAY', dY:0.45 },
 ];
 
 const FEATS=[
@@ -521,6 +511,7 @@ const FEATS=[
   {icon:'🔗',bg:'rgba(0,229,255,.08)',t:'During booking → "Book for someone else"',badge:'b-unique',bt:'UNIQUE TO WEM',d:'Enter their number. Secure live-tracking link via SMS. No app needed.'},
   {icon:'💰',bg:'rgba(255,214,10,.08)',t:'Driver App → Earnings screen',badge:'b-driver',bt:'DRIVER PAY',d:'75% base pay, weekly chart, gas adjustment, and tips.'},
   {icon:'📋',bg:'rgba(255,107,157,.08)',t:'Driver App → Safety Hub',badge:'b-safety',bt:'DRIVER SAFETY',d:'Dash cam, route monitor, 3-sec SOS, incident report.'},
+  {icon:'✅',bg:'rgba(48,209,88,.1)',t:'Every driver passes a background check',badge:'b-safety',bt:'BACKGROUND CHECKED',d:'No driver rides without verification. Badge visible to rider throughout every trip. Renewed every 12 months.'},
 ];
 
 let cur=0,paused=false,ticker=null,tickMs=0;
@@ -552,7 +543,7 @@ function updateArrow(pathId, calloutEl, phoneEl, featureY, direction) {
   const cRect = calloutEl.getBoundingClientRect();
   const pRect = phoneEl.getBoundingClientRect();
   const fy = Math.max(0.06, Math.min(0.94, featureY));
-  const phoneY = pRect.top + pRect.height * fy;
+  const phoneY = pRect.top + pRect.height * fy; // featureY = vertical center of target card
   const calloutY = cRect.top + cRect.height * 0.45;
 
   let d;

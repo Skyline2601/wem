@@ -117,6 +117,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--na
 .footer{text-align:center;padding:28px 20px;border-top:1px solid var(--border);color:var(--muted);font-size:12px;line-height:1.8}
 .footer a{color:var(--brand);text-decoration:none}
 @media(max-width:900px){.god-body{gap:32px}.phone-unit{flex-direction:column!important;align-items:center}.co{width:300px}}
+/* Car verification screenshot overlay */
+#carOverlay{position:absolute;top:0;left:0;width:100%;height:100%;
+  display:none;z-index:20;overflow:hidden;
+  border-radius:40px 40px 30px 30px;background:#fff}
+#carOverlay.show{display:block}
+#carOverlay img{width:100%;height:100%;object-fit:cover;object-position:top}
+/* Ensure iframe sits below overlays */
+.pf iframe{z-index:1}
 </style>
 </head>
 <body>
@@ -129,8 +137,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--na
       <path d="M0,0 L12,5 L0,10 Z" fill="#0A84FF"/>
     </marker>
     <!-- tipL: points left — used for driver arrow (callout left → phone right edge, tip points left INTO phone) -->
-    <marker id="tipL" markerWidth="12" markerHeight="10" refX="12" refY="5" orient="auto-start-reverse">
-      <path d="M12,0 L0,5 L12,10 Z" fill="#00E5FF"/>
+    <marker id="tipL" markerWidth="12" markerHeight="10" refX="12" refY="5" orient="auto">
+      <path d="M0,0 L12,5 L0,10 Z" fill="#00E5FF"/>
     </marker>
   </defs>
   <!-- Rider: callout.right → phone.left, tip at end pointing INTO phone -->
@@ -504,9 +512,13 @@ function drawArrows(s){
     // marker-end with auto-start-reverse makes tipL point LEFT into the phone
     if(dPf.width>0){
       var dfy=Math.max(.04,Math.min(.96,s.dY));
+      // Path: callout.left → phone.right (right-to-left in screen)
+      // Control points curve so path approaches phone from the left side
       var dsx=dCo.left-4,  dsy=dCo.top+dCo.height*.45;
       var dex=dPf.right+4, dey=dPf.top+dPf.height*dfy;
-      var ddx=(dsx-dex)*.45;
+      var ddx=(dsx-dex)*.45; // positive since dsx > dex
+      // cp1: left of start (deeper into callout side)
+      // cp2: right of end (approaching phone from the right, so path goes right-to-left at tip)
       dPath.setAttribute("d","M"+dsx+","+dsy+" C"+(dsx-ddx)+","+dsy+" "+(dex+ddx)+","+dey+" "+dex+","+dey);
       dPath.style.opacity=s.active==="rider"?"0.08":"0.9";
     }

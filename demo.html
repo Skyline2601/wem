@@ -55,15 +55,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--na
 .b-ai{background:rgba(10,132,255,.12);color:var(--brand);border:1px solid rgba(10,132,255,.25)}
 .b-unique{background:rgba(0,229,255,.08);color:var(--cyan);border:1px solid rgba(0,229,255,.2)}
 .b-driver{background:rgba(255,214,10,.1);color:var(--amber);border:1px solid rgba(255,214,10,.2)}
-.phone-col{display:flex;flex-direction:column;align-items:center;gap:8px}
+.phone-col{display:flex;flex-direction:column;align-items:center;gap:8px;position:relative}
 .pchip{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:4px 12px;border-radius:20px}
 .pchip.rider{background:rgba(10,132,255,.1);color:var(--brand);border:1px solid rgba(10,132,255,.28)}
 .pchip.driver{background:rgba(0,229,255,.08);color:var(--cyan);border:1px solid rgba(0,229,255,.22)}
 .pf{width:332px;height:750px;border-radius:42px 42px 32px 32px;border:2px solid rgba(255,255,255,.1);overflow:hidden;background:#000;box-shadow:0 28px 60px rgba(0,0,0,.65);position:relative;flex-shrink:0}
 .pf iframe{position:absolute;top:0;left:0;width:390px;height:844px;border:none;transform:scale(0.851);transform-origin:top left}
+/* Claude chat overlay on rider phone */
+#claudeOverlay{position:absolute;bottom:90px;left:0;right:0;padding:0 12px;
+  display:none;flex-direction:column;gap:8px;z-index:10}
+#claudeOverlay.show{display:flex}
+.claude-bubble{background:rgba(10,132,255,.95);border-radius:18px 18px 4px 18px;
+  padding:10px 14px;font-size:11px;color:#fff;line-height:1.5;
+  box-shadow:0 4px 16px rgba(10,132,255,.4);max-width:240px;
+  animation:bubbleIn .4s cubic-bezier(.34,1.56,.64,1)}
+.claude-label{font-size:9px;font-weight:800;color:rgba(255,255,255,.7);
+  letter-spacing:.5px;margin-bottom:2px}
+@keyframes bubbleIn{from{opacity:0;transform:translateY(12px) scale(.95)}to{opacity:1;transform:none}}
 .popen{font-size:10px;color:var(--muted);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:6px;transition:all .2s}
 .popen:hover{color:var(--brand);border-color:var(--brand)}
+/* Arrow SVG at body level */
 #arrowSvg{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:50;overflow:visible;display:none}
+/* Tour bar */
 #tbar{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:rgba(10,22,48,.96);border:1px solid var(--border);border-radius:50px;padding:8px 14px;display:none;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.5);backdrop-filter:blur(14px);z-index:200}
 #tbar.show{display:flex}
 .tb{width:28px;height:28px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .2s;flex-shrink:0}
@@ -75,7 +88,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--na
 .tdot{height:5px;border-radius:3px;background:var(--border);transition:all .3s;cursor:pointer}
 .tdot.on{background:var(--brand);width:14px}
 .tdot:not(.on){width:5px}
-.tlabel{font-size:11px;font-weight:600;color:var(--sub);white-space:nowrap;min-width:120px;text-align:center}
+.tlabel{font-size:11px;font-weight:600;color:var(--sub);white-space:nowrap;min-width:130px;text-align:center}
 .tring{position:relative;width:28px;height:28px;flex-shrink:0;cursor:pointer}
 .tring svg{position:absolute;top:0;left:0;transform:rotate(-90deg)}
 .trtrack{fill:none;stroke:rgba(255,255,255,.08);stroke-width:2.5}
@@ -108,17 +121,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--na
 </head>
 <body>
 
+<!-- Arrow SVG at body level — no display:none parent -->
 <svg id="arrowSvg">
   <defs>
+    <!-- tipR: points right — used for rider arrow (callout left → phone right) -->
     <marker id="tipR" markerWidth="12" markerHeight="10" refX="0" refY="5" orient="auto">
       <path d="M0,0 L12,5 L0,10 Z" fill="#0A84FF"/>
     </marker>
-    <marker id="tipL" markerWidth="12" markerHeight="10" refX="12" refY="5" orient="auto">
+    <!-- tipL: points left — used for driver arrow (callout left → phone right edge, tip points left INTO phone) -->
+    <marker id="tipL" markerWidth="12" markerHeight="10" refX="12" refY="5" orient="auto-start-reverse">
       <path d="M12,0 L0,5 L12,10 Z" fill="#00E5FF"/>
     </marker>
   </defs>
-  <path id="rArrow" fill="none" stroke="#0A84FF" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#tipR)"/>
-  <path id="dArrow" fill="none" stroke="#00E5FF" stroke-width="2" stroke-dasharray="6,4" marker-start="url(#tipL)"/>
+  <!-- Rider: callout.right → phone.left, tip at end pointing INTO phone -->
+  <path id="rArrow" fill="none" stroke="#0A84FF" stroke-width="2.5" marker-end="url(#tipR)"/>
+  <!-- Driver: callout.left → phone.right, tip at end points left INTO phone via auto-start-reverse -->
+  <path id="dArrow" fill="none" stroke="#00E5FF" stroke-width="2.5" marker-end="url(#tipL)"/>
 </svg>
 
 <div id="tbar">
@@ -144,13 +162,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--na
     <div class="lcard god" id="btnGod">
       <div class="lico god">&#128241;</div>
       <div class="lct">God View</div>
-      <p class="lcd">Both apps live, side by side. Step through every safety feature with animated callouts and arrows.</p>
+      <p class="lcd">Both apps live, side by side. Walk through all 8 safety layers with animated callouts and arrows.</p>
       <div class="lcb god">Open God View &rarr;</div>
     </div>
     <div class="lcard qr" id="btnQr">
       <div class="lico qr">&#11035;</div>
       <div class="lct">Scan QR Code</div>
-      <p class="lcd">Open the live app on your phone. Rider or driver &mdash; explore the full experience.</p>
+      <p class="lcd">Open the live app on your phone. Rider or driver &mdash; explore the full experience yourself.</p>
       <div class="lcb qr">Get QR Codes &rarr;</div>
     </div>
   </div>
@@ -165,24 +183,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--na
     <div class="lbadge"><div class="ldot"></div>LIVE APP</div>
   </div>
   <div class="god-body">
+    <!-- RIDER -->
     <div class="phone-unit rider">
       <div class="co rider-co" id="rCo">
-        <div class="co-num" id="rNum">STEP 1 OF 9</div>
+        <div class="co-num" id="rNum">STEP 1 OF 10</div>
         <div class="co-t" id="rTitle">Safety Hub</div>
         <div class="co-d" id="rDesc">8 active layers on every ride.</div>
-        <span class="co-badge b-safety" id="rBadge">8 ACTIVE LAYERS</span>
+        <span class="co-badge b-safety" id="rBadge">8 LAYERS ACTIVE</span>
       </div>
       <div class="phone-col">
         <span class="pchip rider">Rider App</span>
         <div class="pf" id="rPf">
           <iframe id="rFrame" src="about:blank" loading="lazy" title="Rider App"></iframe>
+          <!-- Claude mid-ride chat overlay -->
+          <div id="claudeOverlay">
+            <div class="claude-bubble">
+              <div class="claude-label">WEM AI &bull; CLAUDE</div>
+              Hey! Just checking in &mdash; how is your ride going? Everything feeling safe and comfortable?
+            </div>
+          </div>
         </div>
-        <a href="https://wem-puce.vercel.app/rider/home" target="_blank" class="popen">Full screen &#8599;</a>
+        <a href="https://wem-puce.vercel.app/rider/home" target="_blank" class="popen" id="rLink">Full screen &#8599;</a>
       </div>
     </div>
+    <!-- DRIVER -->
     <div class="phone-unit driver">
       <div class="co driver-co dim" id="dCo">
-        <div class="co-num" id="dNum">STEP 1 OF 9</div>
+        <div class="co-num" id="dNum">STEP 1 OF 10</div>
         <div class="co-t" id="dTitle">Driver Home</div>
         <div class="co-d" id="dDesc">Safety Hub at the top.</div>
         <span class="co-badge b-safety" id="dBadge">DRIVER READY</span>
@@ -192,7 +219,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--na
         <div class="pf" id="dPf">
           <iframe id="dFrame" src="about:blank" loading="lazy" title="Driver App"></iframe>
         </div>
-        <a href="https://wem-puce.vercel.app/driver/home" target="_blank" class="popen">Full screen &#8599;</a>
+        <a href="https://wem-puce.vercel.app/driver/home" target="_blank" class="popen" id="dLink">Full screen &#8599;</a>
       </div>
     </div>
   </div>
@@ -240,18 +267,111 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--na
 
 <script>
 var STEPS=[
-  {active:"rider",rY:.22,dY:.22,rUrl:"https://wem-puce.vercel.app/rider/home",dUrl:"https://wem-puce.vercel.app/driver/home",rT:"Safety is our #1 priority",rD:"Wem is the only DFW rideshare built safety-first. Every ride includes 8 active protection layers before you even confirm.",rB:"b-safety",rBT:"8 LAYERS — NO OTHER APP",dT:"Driver Safety Too",dD:"Drivers get the same protection. Safety Hub is the first thing they see.",dB:"b-safety",dBT:"DRIVERS PROTECTED"},
-  {active:"rider",rY:.22,dY:.22,rUrl:"https://wem-puce.vercel.app/rider/safety",dUrl:"https://wem-puce.vercel.app/driver/safety",rT:"Every Ride is Recorded",rD:"Dash cam activates automatically when a driver accepts. Footage encrypted and stored 30 days. Uber and Lyft do not guarantee this.",rB:"b-safety",rBT:"DASH CAM ALWAYS ON",dT:"Driver Dash Cam",dD:"Driver sees cam status and toggles route monitoring from their Safety Hub.",dB:"b-safety",dBT:"RECORDING"},
-  {active:"both",rY:.35,dY:.35,rUrl:"https://wem-puce.vercel.app/rider/safety",dUrl:"https://wem-puce.vercel.app/driver/safety",rT:"AI Watches Every Route",rD:"Claude monitors your route in real time. Any unexpected deviation alerts both the rider and the Wem safety team instantly.",rB:"b-ai",rBT:"AI ROUTE MONITOR",dT:"Driver Route Monitor",dD:"Driver can toggle route monitoring. Any deviation alerts both sides.",dB:"b-safety",dBT:"ACTIVE"},
-  {active:"both",rY:.60,dY:.60,rUrl:"https://wem-puce.vercel.app/rider/safety",dUrl:"https://wem-puce.vercel.app/driver/safety",rT:"One-Tap Silent SOS",rD:"Hold 3 seconds to silently alert the Wem safety team, share your GPS, and contact your emergency person. No phone call needed.",rB:"b-safety",rBT:"SILENT SOS",dT:"Driver SOS",dD:"Drivers get their own SOS. 3-second hold, silent alert, instant GPS share.",dB:"b-safety",dBT:"DRIVER SOS"},
-  {active:"rider",rY:.22,dY:.40,rUrl:"https://wem-puce.vercel.app/rider/safety",dUrl:null,rT:"Guest Safety Link",rD:"Booking for someone else? They get a secure SMS link with live tracking, SOS, and car verification. No app download required.",rB:"b-unique",rBT:"UNIQUE TO WEM",dT:"No Other App Does This",dD:"Lyft and Uber have no equivalent. Only Wem extends safety to non-app users.",dB:"b-unique",dBT:"FIRST IN DFW"},
-  {active:"rider",rY:.40,dY:.40,rUrl:"https://wem-puce.vercel.app/rider/active",dUrl:null,rT:"Claude Checks In Mid-Ride",rD:"Claude AI checks in with you during every ride. No response triggers a follow-up. Something wrong? We act. Powered by Anthropic.",rB:"b-ai",rBT:"AI POWERED BY ANTHROPIC",dT:"Real-Time AI Monitoring",dD:"Claude watches for anything unusual during the ride on both sides.",dB:"b-ai",dBT:"CLAUDE AI"},
-  {active:"rider",rY:.55,dY:.55,rUrl:"https://wem-puce.vercel.app/rider/active",dUrl:null,rT:"Verify Before You Get In",rD:"Car photo, license plate, color, and make shown before the driver arrives. Never get in the wrong car again.",rB:"b-safety",rBT:"CAR VERIFICATION",dT:"Background Checked",dD:"Every driver passed a background check. Badge visible throughout the ride.",dB:"b-safety",dBT:"VERIFIED"},
-  {active:"rider",rY:.55,dY:.40,rUrl:"https://wem-puce.vercel.app/rider/active",dUrl:"https://wem-puce.vercel.app/driver/profile",rT:"Every Driver Background Checked",rD:"No driver completes a single ride without a background check. The verified badge is visible to the rider on every trip.",rB:"b-safety",rBT:"BACKGROUND CHECK EVERY DRIVER",dT:"Driver Verification",dD:"Background check status shown on profile. Renewed every 12 months automatically.",dB:"b-safety",dBT:"VERIFIED"},
-  {active:"driver",rY:.40,dY:.45,rUrl:null,dUrl:"https://wem-puce.vercel.app/driver/earnings",rT:"Why Drivers Choose Wem",rD:"75% base pay Year 1, 78% Year 2. Gas adjustment and 100% of tips go directly to drivers. Highest pay in DFW.",rB:"b-driver",rBT:"HIGHEST PAY IN DFW",dT:"Driver Earnings",dD:"More drivers means shorter wait times and a better experience for every rider.",dB:"b-driver",dBT:"75% BASE PAY"}
+  // 1. Intro — Safety Hub card on home screen
+  {active:"both",rY:.20,dY:.20,
+   rUrl:"https://wem-puce.vercel.app/rider/home",
+   dUrl:"https://wem-puce.vercel.app/driver/home",
+   rT:"Safety is our #1 priority",
+   rD:"Wem is the only DFW rideshare built safety-first. Every ride has 8 active protection layers before you even confirm.",
+   rB:"b-safety",rBT:"8 LAYERS ACTIVE",
+   dT:"Driver Safety Too",dD:"Safety Hub is the first thing drivers see too. Both sides protected.",
+   dB:"b-safety",dBT:"DRIVERS PROTECTED"},
+
+  // 2. Dash cam — safety screen card 1
+  {active:"both",rY:.28,dY:.28,
+   rUrl:"https://wem-puce.vercel.app/rider/safety",
+   dUrl:"https://wem-puce.vercel.app/driver/safety",
+   rT:"Layer 1 — Dash Cam Always On",
+   rD:"Dash cam activates the moment a driver accepts. Footage encrypted and stored 30 days. Uber and Lyft do not guarantee this.",
+   rB:"b-safety",rBT:"ALWAYS RECORDING",
+   dT:"Driver Dash Cam",dD:"Drivers see cam status live. Can toggle and review from their Safety Hub.",
+   dB:"b-safety",dBT:"RECORDING"},
+
+  // 3. Route monitor — safety screen card 2
+  {active:"both",rY:.42,dY:.42,
+   rUrl:"https://wem-puce.vercel.app/rider/safety",
+   dUrl:"https://wem-puce.vercel.app/driver/safety",
+   rT:"Layer 2 — AI Route Monitoring",
+   rD:"Claude monitors your route in real time. Any unexpected deviation triggers an instant alert to rider, driver, and the Wem safety team.",
+   rB:"b-ai",rBT:"AI ROUTE MONITOR",
+   dT:"Route Monitor Active",dD:"Driver can toggle route monitoring. Any deviation alerts both sides simultaneously.",
+   dB:"b-safety",dBT:"ACTIVE"},
+
+  // 4. SOS — safety screen card 3 (locked screen + watch)
+  {active:"both",rY:.56,dY:.56,
+   rUrl:"https://wem-puce.vercel.app/rider/safety",
+   dUrl:"https://wem-puce.vercel.app/driver/safety",
+   rT:"Layer 3 — One-Tap Silent SOS",
+   rD:"Hold 3 seconds to silently alert the Wem safety team and share your GPS. Works while your phone is locked and on your Apple Watch.",
+   rB:"b-safety",rBT:"WORKS LOCKED + ON YOUR WATCH",
+   dT:"Driver SOS",dD:"Drivers get the same SOS. 3-second hold, silent alert, instant GPS share. Works on Apple Watch too.",
+   dB:"b-safety",dBT:"DRIVER SOS"},
+
+  // 5. Claude mid-ride check-ins — active ride
+  {active:"rider",rY:.55,dY:.40,
+   rUrl:"https://wem-puce.vercel.app/rider/active",
+   dUrl:null,
+   rT:"Layer 4 — Claude Checks In Mid-Ride",
+   rD:"Claude AI sends you a check-in message during the ride. No response triggers a follow-up. Still nothing? Wem acts. Powered by Anthropic.",
+   rB:"b-ai",rBT:"AI CHECK-INS EVERY RIDE",
+   dT:"AI Monitoring Both Sides",dD:"Claude watches for anything unusual on both sides of every ride.",
+   dB:"b-ai",dBT:"CLAUDE AI"},
+
+  // 6. Guest Safety Link — during booking flow
+  {active:"rider",rY:.62,dY:.40,
+   rUrl:"https://wem-puce.vercel.app/rider/classic",
+   dUrl:null,
+   rT:"Layer 5 — Guest Safety Link",
+   rD:"Booking for someone else? During checkout, add their number. They get a secure SMS with live tracking, SOS, and car verification. No app needed.",
+   rB:"b-unique",rBT:"UNIQUE TO WEM",
+   dT:"No Other App Does This",dD:"Lyft and Uber have no equivalent. Only Wem extends safety to non-app users.",
+   dB:"b-unique",dBT:"FIRST IN DFW"},
+
+  // 7. Female driver option — during booking flow
+  {active:"rider",rY:.70,dY:.40,
+   rUrl:"https://wem-puce.vercel.app/rider/classic",
+   dUrl:null,
+   rT:"Layer 6 — Choose Your Driver Gender",
+   rD:"During booking, female riders can request a female driver. Set it once and Wem remembers your preference for every future ride.",
+   rB:"b-unique",rBT:"FEMALE DRIVER OPTION",
+   dT:"Driver Matching",dD:"Driver matching respects rider preferences. Female drivers are verified and background checked.",
+   dB:"b-safety",dBT:"VERIFIED MATCH"},
+
+  // 8. Car verification + background check — driver arriving
+  {active:"rider",rY:.58,dY:.42,
+   rUrl:"https://wem-puce.vercel.app/rider/active",
+   dUrl:"https://wem-puce.vercel.app/driver/profile",
+   rT:"Layer 7 — Verify Before You Get In",
+   rD:"When your driver is close, a panel shows their car photo, license plate, color, and make. Check it before you open the door.",
+   rB:"b-safety",rBT:"CAR VERIFICATION",
+   dT:"Layer 8 — Background Checked",dD:"Driver background check badge is on their profile. Riders see it during the ride. Renewed every 12 months.",
+   dB:"b-safety",dBT:"BACKGROUND CHECK VERIFIED"},
+
+  // 9. Background check badge on active ride
+  {active:"both",rY:.65,dY:.42,
+   rUrl:"https://wem-puce.vercel.app/rider/active",
+   dUrl:"https://wem-puce.vercel.app/driver/profile",
+   rT:"Layer 8 — Background Checked Every Driver",
+   rD:"No driver completes a single ride without a background check. The verified badge is visible to the rider throughout every trip.",
+   rB:"b-safety",rBT:"BACKGROUND CHECK EVERY DRIVER",
+   dT:"Driver Verification Badge",dD:"Shown on driver profile during active ride. No background check = no rides.",
+   dB:"b-safety",dBT:"VERIFIED"},
+
+  // 10. Why drivers choose Wem
+  {active:"driver",rY:.40,dY:.45,
+   rUrl:null,
+   dUrl:"https://wem-puce.vercel.app/driver/earnings",
+   rT:"Why Drivers Choose Wem",
+   rD:"75% base pay Year 1, 78% Year 2. Gas adjustment and 100% of tips go directly to drivers. Highest pay in DFW.",
+   rB:"b-driver",rBT:"HIGHEST PAY IN DFW",
+   dT:"Driver Earnings",dD:"More drivers means shorter wait times and a better experience for every rider.",
+   dB:"b-driver",dBT:"75% BASE PAY"}
 ];
 
-var cur=0,paused=false,ticker=null,elapsed=0,DUR=7500;
+var cur=0,paused=false,ticker=null,elapsed=0,DUR=12000;
+
+// STEP 5 (index 4) is the Claude check-in step
+var CLAUDE_STEP=4;
 
 function show(id){
   ["landing","godView","qrView"].forEach(function(v){
@@ -268,6 +388,7 @@ function show(id){
     tbar.classList.remove("show");
     svg.style.display="none";
     stopTimer();
+    document.getElementById("claudeOverlay").classList.remove("show");
   }
   window.scrollTo(0,0);
 }
@@ -297,6 +418,8 @@ function init(){
 function goTo(idx){
   cur=idx;
   var s=STEPS[idx];
+
+  // Update callout content
   document.getElementById("rNum").textContent="STEP "+(idx+1)+" OF "+STEPS.length;
   document.getElementById("rTitle").textContent=s.rT;
   document.getElementById("rDesc").textContent=s.rD;
@@ -307,51 +430,79 @@ function goTo(idx){
   document.getElementById("dDesc").textContent=s.dD;
   var db=document.getElementById("dBadge");
   db.className="co-badge "+s.dB; db.textContent=s.dBT;
+
+  // Dim inactive callouts
   var rCo=document.getElementById("rCo");
   var dCo=document.getElementById("dCo");
   if(s.active==="rider"){rCo.classList.remove("dim");dCo.classList.add("dim");}
   else if(s.active==="driver"){rCo.classList.add("dim");dCo.classList.remove("dim");}
   else{rCo.classList.remove("dim");dCo.classList.remove("dim");}
+
+  // Navigate iframes
   var rf=document.getElementById("rFrame");
   var df=document.getElementById("dFrame");
   if(s.rUrl&&rf.src!==s.rUrl) rf.src=s.rUrl;
   if(s.dUrl&&df.src!==s.dUrl) df.src=s.dUrl;
+
+  // Update full screen links
+  if(s.rUrl) document.getElementById("rLink").href=s.rUrl;
+  if(s.dUrl) document.getElementById("dLink").href=s.dUrl;
+
+  // Claude overlay — show only on step 5 (Claude check-in step)
+  var overlay=document.getElementById("claudeOverlay");
+  if(idx===CLAUDE_STEP){
+    overlay.classList.remove("show");
+    // Delay bubble appearance for drama
+    setTimeout(function(){overlay.classList.add("show");},800);
+  } else {
+    overlay.classList.remove("show");
+  }
+
+  // Tour label
   document.getElementById("tlabel").textContent=s.active==="driver"?s.dT:s.rT;
+
+  // Dots
   var dots=document.getElementById("dots").children;
   for(var i=0;i<dots.length;i++) dots[i].className="tdot"+(i===cur?" on":"");
+
+  // Arrows
   drawArrows(s);
   resetTimer();
 }
 
 function drawArrows(s){
   try{
-    var rc=document.getElementById("rCo").getBoundingClientRect();
-    var rp=document.getElementById("rPf").getBoundingClientRect();
-    var dc=document.getElementById("dCo").getBoundingClientRect();
-    var dp=document.getElementById("dPf").getBoundingClientRect();
+    var rCo=document.getElementById("rCo").getBoundingClientRect();
+    var rPf=document.getElementById("rPf").getBoundingClientRect();
+    var dCo=document.getElementById("dCo").getBoundingClientRect();
+    var dPf=document.getElementById("dPf").getBoundingClientRect();
     var rPath=document.getElementById("rArrow");
     var dPath=document.getElementById("dArrow");
-    if(rp.width>0){
-      var rsx=rc.right+4, rsy=rc.top+rc.height*.45;
-      var rex=rp.left-4,  rey=rp.top+rp.height*Math.max(.05,Math.min(.95,s.rY));
+
+    // RIDER: start=callout.right, end=phone.left — tip points RIGHT into phone
+    if(rPf.width>0){
+      var rsx=rCo.right+4, rsy=rCo.top+rCo.height*.45;
+      var rex=rPf.left-4,  rey=rPf.top+rPf.height*Math.max(.04,Math.min(.96,s.rY));
       var rdx=(rex-rsx)*.45;
       rPath.setAttribute("d","M"+rsx+","+rsy+" C"+(rsx+rdx)+","+rsy+" "+(rex-rdx)+","+rey+" "+rex+","+rey);
-      rPath.style.opacity=s.active==="driver"?"0.1":"0.9";
+      rPath.style.opacity=s.active==="driver"?"0.08":"0.9";
     }
-    if(dp.width>0){
-      var dfy=Math.max(.05,Math.min(.95,s.dY));
-      var dsx=dp.right+4, dsy=dp.top+dp.height*dfy;
-      var dex=dc.left-4,  dey=dc.top+dc.height*.45;
-      var ddx=Math.abs(dex-dsx)*.45;
+
+    // DRIVER: start=callout.left, end=phone.right — path goes right-to-left
+    // marker-end with auto-start-reverse makes tipL point LEFT into the phone
+    if(dPf.width>0){
+      var dfy=Math.max(.04,Math.min(.96,s.dY));
+      var dsx=dCo.left-4,  dsy=dCo.top+dCo.height*.45;
+      var dex=dPf.right+4, dey=dPf.top+dPf.height*dfy;
+      var ddx=(dsx-dex)*.45;
       dPath.setAttribute("d","M"+dsx+","+dsy+" C"+(dsx-ddx)+","+dsy+" "+(dex+ddx)+","+dey+" "+dex+","+dey);
-      dPath.style.opacity=s.active==="rider"?"0.1":"0.9";
+      dPath.style.opacity=s.active==="rider"?"0.08":"0.9";
     }
   }catch(e){}
 }
 
 function resetTimer(){
-  stopTimer();
-  elapsed=0;
+  stopTimer(); elapsed=0;
   document.getElementById("trfill").style.strokeDashoffset="69.1";
   if(!paused) startTimer();
 }

@@ -39,7 +39,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--na
 .lbadge{display:flex;align-items:center;gap:5px;background:rgba(48,209,88,.1);border:1px solid rgba(48,209,88,.25);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:800;color:var(--green)}
 .ldot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.god-body{flex:1;display:flex;justify-content:center;align-items:flex-start;gap:80px;padding:32px 20px 120px;flex-wrap:wrap;background:radial-gradient(ellipse at 50% 20%,rgba(10,132,255,.04),transparent 60%)}
+.god-body{flex:1;display:flex;justify-content:center;align-items:flex-start;gap:80px;padding:32px 20px 60px;flex-wrap:wrap;background:radial-gradient(ellipse at 50% 20%,rgba(10,132,255,.04),transparent 60%)}
 .phone-unit{display:flex;align-items:center;gap:32px}
 .phone-unit.rider{flex-direction:row}
 .phone-unit.driver{flex-direction:row-reverse}
@@ -63,6 +63,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--na
 .pchip.driver{background:rgba(0,229,255,.08);color:var(--cyan);border:1px solid rgba(0,229,255,.22)}
 .pf{width:332px;height:750px;border-radius:42px 42px 32px 32px;border:2px solid rgba(255,255,255,.1);overflow:hidden;background:#000;box-shadow:0 28px 60px rgba(0,0,0,.65);position:relative;flex-shrink:0}
 .pf iframe{position:absolute;top:0;left:0;width:390px;height:844px;border:none;transform:scale(0.851);transform-origin:top left;z-index:1}
+
+/* LED-glow highlight on phone screens — replaces arrows */
+.phone-highlight{position:absolute;left:8px;right:8px;height:14%;
+  border-radius:18px;border:2.5px solid var(--brand);
+  pointer-events:none;z-index:18;display:none;
+  background:rgba(10,132,255,.08);
+  box-shadow:0 0 0 6px rgba(10,132,255,.12),0 0 20px rgba(10,132,255,.5),inset 0 0 16px rgba(10,132,255,.15);
+  animation:glow 2s ease-in-out infinite;
+  transition:top .5s cubic-bezier(.4,0,.2,1);
+  transform:translateY(-50%);
+}
+.phone-highlight.driver-hl{border-color:var(--cyan);
+  background:rgba(0,229,255,.08);
+  box-shadow:0 0 0 6px rgba(0,229,255,.12),0 0 20px rgba(0,229,255,.5),inset 0 0 16px rgba(0,229,255,.15);
+}
+.phone-highlight.show{display:block}
+@keyframes glow{
+  0%,100%{box-shadow:0 0 0 6px rgba(10,132,255,.12),0 0 20px rgba(10,132,255,.5),inset 0 0 16px rgba(10,132,255,.15)}
+  50%{box-shadow:0 0 0 8px rgba(10,132,255,.18),0 0 28px rgba(10,132,255,.7),inset 0 0 24px rgba(10,132,255,.25)}
+}
+.phone-highlight.driver-hl{animation-name:glowD}
+@keyframes glowD{
+  0%,100%{box-shadow:0 0 0 6px rgba(0,229,255,.12),0 0 20px rgba(0,229,255,.5),inset 0 0 16px rgba(0,229,255,.15)}
+  50%{box-shadow:0 0 0 8px rgba(0,229,255,.18),0 0 28px rgba(0,229,255,.7),inset 0 0 24px rgba(0,229,255,.25)}
+}
 /* Claude bubble overlay */
 .claude-overlay{position:absolute;bottom:90px;left:0;right:0;padding:0 12px;display:none;flex-direction:column;gap:8px;z-index:15;pointer-events:none}
 .claude-overlay.show{display:flex}
@@ -71,8 +96,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--na
 @keyframes bubbleIn{from{opacity:0;transform:translateY(12px) scale(.95)}to{opacity:1;transform:none}}
 .popen{font-size:10px;color:var(--muted);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:6px;transition:all .2s}
 .popen:hover{color:var(--brand);border-color:var(--brand)}
-#arrowSvg{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:50;overflow:visible;display:none}
-#tbar{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:rgba(10,22,48,.96);border:1px solid var(--border);border-radius:50px;padding:8px 14px;display:none;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.5);backdrop-filter:blur(14px);z-index:200}
+#tbar{position:fixed;bottom:110px;left:50%;transform:translateX(-50%);background:rgba(10,22,48,.96);border:1px solid var(--border);border-radius:50px;padding:8px 14px;display:none;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.5);backdrop-filter:blur(14px);z-index:200}
 #tbar.show{display:flex}
 .tb{width:28px;height:28px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .2s;flex-shrink:0}
 .tb.prev{background:rgba(255,255,255,.06);color:var(--sub)}
@@ -118,21 +142,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--na
 </head>
 <body>
 
-<svg id="arrowSvg">
-  <defs>
-    <!-- Both markers: apex at x=12 (right side of marker), refX=12 anchors apex to path endpoint -->
-    <!-- orient="auto" rotates marker so its +x axis aligns with the path direction at the endpoint -->
-    <!-- Result: tip (apex) lands ON the endpoint, line trails BACK along the path -->
-    <marker id="tipR" markerWidth="12" markerHeight="10" refX="0" refY="5" orient="auto">
-      <path d="M0,0 L12,5 L0,10 Z" fill="#0A84FF"/>
-    </marker>
-    <marker id="tipL" markerWidth="12" markerHeight="10" refX="0" refY="5" orient="auto">
-      <path d="M0,0 L12,5 L0,10 Z" fill="#00E5FF"/>
-    </marker>
-  </defs>
-  <path id="rArrow" fill="none" stroke="#0A84FF" stroke-width="2.5" marker-end="url(#tipR)"/>
-  <path id="dArrow" fill="none" stroke="#00E5FF" stroke-width="2.5" marker-end="url(#tipL)"/>
-</svg>
+
 
 <div id="tbar">
   <button class="tb prev" id="btnPrev">&#8249;</button>
@@ -189,6 +199,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--na
         <span class="pchip rider">Rider App</span>
         <div class="pf" id="rPf">
           <iframe id="rFrame" src="about:blank" loading="lazy" title="Rider App"></iframe>
+          <div class="phone-highlight" id="rHighlight"></div>
           <div class="claude-overlay" id="rClaudeOverlay">
             <div class="claude-bubble">
               <div class="claude-label">WEM AI &bull; CLAUDE</div>
@@ -210,6 +221,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--na
         <span class="pchip driver">Driver App</span>
         <div class="pf" id="dPf">
           <iframe id="dFrame" src="about:blank" loading="lazy" title="Driver App"></iframe>
+          <div class="phone-highlight driver-hl" id="dHighlight"></div>
         </div>
         <a href="https://wem-puce.vercel.app/driver/home" target="_blank" class="popen" id="dLink">Full screen &#8599;</a>
       </div>
@@ -284,14 +296,11 @@ function show(id){
   });
   document.getElementById(id).classList.add("active");
   var tbar=document.getElementById("tbar");
-  var svg=document.getElementById("arrowSvg");
   if(id==="godView"){
     tbar.classList.add("show");
-    svg.style.display="block";
     requestAnimationFrame(function(){requestAnimationFrame(function(){init();});});
   } else {
     tbar.classList.remove("show");
-    svg.style.display="none";
     stopTimer();
     document.getElementById("rClaudeOverlay").classList.remove("show");
   }
@@ -380,39 +389,31 @@ function goTo(idx){
   var dots=document.getElementById("dots").children;
   for(var i=0;i<dots.length;i++) dots[i].className="tdot"+(i===cur?" on":"");
 
-  drawArrows(s);
+  drawHighlights(s);
   resetTimer();
 }
 
-function drawArrows(s){
-  try{
-    var rCo=document.getElementById("rCo").getBoundingClientRect();
-    var rPf=document.getElementById("rPf").getBoundingClientRect();
-    var dCo=document.getElementById("dCo").getBoundingClientRect();
-    var dPf=document.getElementById("dPf").getBoundingClientRect();
-    var rPath=document.getElementById("rArrow"), dPath=document.getElementById("dArrow");
+function drawHighlights(s){
+  var rHL = document.getElementById("rHighlight");
+  var dHL = document.getElementById("dHighlight");
 
-    // RIDER arrow: starts at callout right edge, ends at phone left edge
-    // marker-end with refX=12 places the arrow tip AT the endpoint (phone)
-    if(rPf.width>0){
-      var rsx=rCo.right+4, rsy=rCo.top+rCo.height*.45;
-      var rex=rPf.left-4,  rey=rPf.top+rPf.height*Math.max(.04,Math.min(.96,s.rY));
-      var rdx=(rex-rsx)*.45;
-      rPath.setAttribute("d","M"+rsx+","+rsy+" C"+(rsx+rdx)+","+rsy+" "+(rex-rdx)+","+rey+" "+rex+","+rey);
-      rPath.style.opacity=s.active==="driver"?"0.08":"0.9";
-    }
+  // Rider highlight
+  if(s.rUrl !== null && (s.active === "rider" || s.active === "both")){
+    var fy = Math.max(.04, Math.min(.94, s.rY));
+    rHL.style.top = (fy * 100 - 6) + "%";
+    rHL.classList.add("show");
+  } else {
+    rHL.classList.remove("show");
+  }
 
-    // DRIVER arrow: starts at callout left edge, ends at phone right edge
-    // Path goes RIGHT-TO-LEFT in screen space; orient="auto" rotates the marker so apex still faces endpoint
-    if(dPf.width>0){
-      var dfy=Math.max(.04,Math.min(.96,s.dY));
-      var dsx=dCo.left-4,  dsy=dCo.top+dCo.height*.45;
-      var dex=dPf.right+4, dey=dPf.top+dPf.height*dfy;
-      var ddx=(dsx-dex)*.45;
-      dPath.setAttribute("d","M"+dsx+","+dsy+" C"+(dsx-ddx)+","+dsy+" "+(dex+ddx)+","+dey+" "+dex+","+dey);
-      dPath.style.opacity=s.active==="rider"?"0.08":"0.9";
-    }
-  }catch(e){}
+  // Driver highlight
+  if(s.dUrl !== null && (s.active === "driver" || s.active === "both")){
+    var dfy = Math.max(.04, Math.min(.94, s.dY));
+    dHL.style.top = (dfy * 100 - 6) + "%";
+    dHL.classList.add("show");
+  } else {
+    dHL.classList.remove("show");
+  }
 }
 
 function resetTimer(){
@@ -436,7 +437,7 @@ function togglePause(){
   if(paused) stopTimer(); else startTimer();
 }
 window.addEventListener("resize",function(){
-  if(document.getElementById("godView").classList.contains("active")) drawArrows(STEPS[cur]);
+  if(document.getElementById("godView").classList.contains("active")) drawHighlights(STEPS[cur]);
 });
 document.addEventListener("keydown",function(e){
   if(!document.getElementById("godView").classList.contains("active")) return;
